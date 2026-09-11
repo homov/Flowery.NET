@@ -110,6 +110,9 @@
                     <ContentPresenter Name="PART_ContentPresenter"
                                       Content="{TemplateBinding Header}"
                                       ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      TextElement.FontWeight="{TemplateBinding FontWeight}"
+                                      TextElement.FontSize="{TemplateBinding FontSize}"
+                                      TextElement.FontFamily="{TemplateBinding FontFamily}"
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Center" />
                 </Border>

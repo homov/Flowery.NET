@@ -39,7 +39,13 @@ namespace Flowery.Controls
         {
             base.OnPropertyChanged(change);
 
-            if (change.Property == TextProperty || change.Property == ShowMnemonicProperty)
+            if (change.Property == TextProperty
+                || change.Property == ShowMnemonicProperty
+                || change.Property == FontWeightProperty
+                || change.Property == FontSizeProperty
+                || change.Property == FontFamilyProperty
+                || change.Property == FontStyleProperty
+                || change.Property == FontStretchProperty)
             {
                 ApplyMnemonicPresentation();
             }
@@ -61,27 +67,38 @@ namespace Flowery.Controls
 
             if (!ShowMnemonic || info.MnemonicIndex < 0 || info.MnemonicIndex >= display.Length)
             {
-                inlines.Add(new Run(display));
+                inlines.Add(CreateRun(display));
                 Inlines = inlines;
                 return;
             }
 
             if (info.MnemonicIndex > 0)
             {
-                inlines.Add(new Run(display.Substring(0, info.MnemonicIndex)));
+                inlines.Add(CreateRun(display.Substring(0, info.MnemonicIndex)));
             }
 
-            inlines.Add(new Run(display.Substring(info.MnemonicIndex, 1))
-            {
-                TextDecorations = Avalonia.Media.TextDecorations.Underline
-            });
+            var mnemonicRun = CreateRun(display.Substring(info.MnemonicIndex, 1));
+            mnemonicRun.TextDecorations = Avalonia.Media.TextDecorations.Underline;
+            inlines.Add(mnemonicRun);
 
             if (info.MnemonicIndex + 1 < display.Length)
             {
-                inlines.Add(new Run(display.Substring(info.MnemonicIndex + 1)));
+                inlines.Add(CreateRun(display.Substring(info.MnemonicIndex + 1)));
             }
 
             Inlines = inlines;
+        }
+
+        private Run CreateRun(string text)
+        {
+            return new Run(text)
+            {
+                FontWeight = FontWeight,
+                FontSize = FontSize,
+                FontFamily = FontFamily,
+                FontStyle = FontStyle,
+                FontStretch = FontStretch
+            };
         }
     }
 }

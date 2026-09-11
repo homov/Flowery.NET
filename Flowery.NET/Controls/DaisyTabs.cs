@@ -444,6 +444,11 @@ namespace Flowery.Controls
             {
                 SetupTabContextMenus();
             }
+            else if (change.Property == SelectedIndexProperty
+                     || change.Property == SelectedItemProperty)
+            {
+                UpdateTabWidths();
+            }
         }
 
         #region Context Menu Setup

@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.2] - 2026-09-11
+
+### Fixed
+
+- `DaisyTabs` now measures string tab headers with the tab's current `FontWeight`. Selected `None` tabs use SemiBold for both measure and render, so bold titles no longer clip on the right.
+
 ## [3.2.1] - 2026-09-04
 
 ### Fixed
@@ -851,7 +857,8 @@ At least that's the plan. Happy holidays 2025!
 - Custom controls: ComponentSidebar, ModifierKeys
 - Gallery demo application
 
-[3.2.1]: https://github.com/tobitege/Flowery.NET/compare/v3.2.0...HEAD
+[3.2.2]: https://github.com/tobitege/Flowery.NET/compare/v3.2.1...HEAD
+[3.2.1]: https://github.com/tobitege/Flowery.NET/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/tobitege/Flowery.NET/compare/v3.1.1...v3.2.0
 [3.1.1]: https://github.com/tobitege/Flowery.NET/compare/v3.1.0...v3.1.1
 [3.1.0]: https://github.com/tobitege/Flowery.NET/compare/v3.0.0...v3.1.0
