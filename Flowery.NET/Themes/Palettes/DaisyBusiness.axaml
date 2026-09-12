@@ -1,4 +1,4 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- DaisyUI Business Theme Palette -->
     <!-- Primary -->
@@ -6,8 +6,21 @@
     <SolidColorBrush x:Key="DaisyPrimaryBrush" Color="{StaticResource DaisyPrimaryColor}" />
     <Color x:Key="DaisyPrimaryFocusColor">#163E66</Color>
     <SolidColorBrush x:Key="DaisyPrimaryFocusBrush" Color="{StaticResource DaisyPrimaryFocusColor}" />
-    <Color x:Key="DaisyPrimaryContentColor">#D0DAE5</Color>
+    <Color x:Key="DaisyPrimaryContentColor">#FFFFFF</Color>
     <SolidColorBrush x:Key="DaisyPrimaryContentBrush" Color="{StaticResource DaisyPrimaryContentColor}" />
+
+    <!-- White matches Error content; keep the original Primary and Focus blues. -->
+    <SolidColorBrush x:Key="DaisyButtonPrimaryForegroundBrush" Color="{StaticResource DaisyPrimaryContentColor}" />
+    <SolidColorBrush x:Key="DaisyButtonPrimarySoftBrush" Color="{StaticResource DaisyPrimaryColor}" Opacity="0.12" />
+    <SolidColorBrush x:Key="DaisyButtonPrimaryDisabledBrush" Color="#2B4055" />
+    <x:Double x:Key="DaisyButtonPrimaryDisabledOpacity">1</x:Double>
+
+    <!-- Fluent draws selection on PART_LayoutRoot, including hover and pressed states. -->
+    <SolidColorBrush x:Key="TreeViewItemBackgroundSelected" Color="{StaticResource DaisyPrimaryColor}" />
+    <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedPointerOver" Color="{StaticResource DaisyPrimaryFocusColor}" />
+    <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedPressed" Color="{StaticResource DaisyPrimaryFocusColor}" />
+    <SolidColorBrush x:Key="TreeViewItemBackgroundSelectedDisabled" Color="#2B4055" />
+    <SolidColorBrush x:Key="DaisyTreeSelectedForegroundBrush" Color="{StaticResource DaisyPrimaryContentColor}" />
 
     <!-- Secondary -->
     <Color x:Key="DaisySecondaryColor">#7C909A</Color>

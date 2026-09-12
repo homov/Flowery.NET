@@ -1,5 +1,14 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Button defaults follow the active palette; individual palettes can override them. -->
+    <SolidColorBrush x:Key="DaisyButtonPrimaryForegroundBrush" Color="{DynamicResource DaisyPrimaryColor}" />
+    <SolidColorBrush x:Key="DaisyButtonPrimarySoftBrush" Color="{DynamicResource DaisyBase200Color}" />
+    <SolidColorBrush x:Key="DaisyButtonPrimaryDisabledBrush" Color="{DynamicResource DaisyPrimaryColor}" />
+    <x:Double x:Key="DaisyButtonPrimaryDisabledOpacity">0.5</x:Double>
+
+    <!-- Match Fluent's normal tree foreground outside palettes with a selection override. -->
+    <SolidColorBrush x:Key="DaisyTreeSelectedForegroundBrush" Color="{DynamicResource SystemBaseHighColor}" />
+
     <!-- Theme Dictionaries for Light/Dark mode switching -->
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">

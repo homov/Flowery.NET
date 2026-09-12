@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.3] - 2026-09-12
+
+### Fixed
+
+- Business-theme Primary buttons use white text, matching Error buttons, including Outline, Dash, Soft, and Link styles. Outline and Dash fill on hover; Soft keeps its tinted background.
+- Disabled filled Primary buttons in Business retain white text on a muted blue background without changing enabled or command state.
+- Selected tree nodes in Business use white header text and chevrons on dark blue, including hover and pressed states.
+
+### Added
+
+- Added a native tree selection example to the gallery navigation page.
+
 ## [3.2.2] - 2026-09-11
 
 ### Fixed
@@ -857,7 +869,8 @@ At least that's the plan. Happy holidays 2025!
 - Custom controls: ComponentSidebar, ModifierKeys
 - Gallery demo application
 
-[3.2.2]: https://github.com/tobitege/Flowery.NET/compare/v3.2.1...HEAD
+[3.2.3]: https://github.com/tobitege/Flowery.NET/compare/v3.2.2...HEAD
+[3.2.2]: https://github.com/tobitege/Flowery.NET/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/tobitege/Flowery.NET/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/tobitege/Flowery.NET/compare/v3.1.1...v3.2.0
 [3.1.1]: https://github.com/tobitege/Flowery.NET/compare/v3.1.0...v3.1.1

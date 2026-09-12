@@ -1,4 +1,4 @@
-<Styles xmlns="https://github.com/avaloniaui"
+﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="Flowery.DaisyUITheme">
     <Styles.Resources>
@@ -102,4 +102,16 @@
     <StyleInclude Source="/Themes/DaisyDock.axaml" />
     <StyleInclude Source="/Themes/DaisyDateTimeline.axaml" />
     <StyleInclude Source="/Themes/Custom/Weather/DaisyWeatherIcon.axaml" />
+
+    <!-- Palette selection foreground defaults to Fluent's normal tree foreground.
+         Fluent's header presenter is inside PART_Header, not a direct child of PART_LayoutRoot. -->
+    <Style Selector="TreeViewItem:selected">
+        <Setter Property="Foreground" Value="{DynamicResource DaisyTreeSelectedForegroundBrush}" />
+    </Style>
+    <Style Selector="TreeViewItem:selected:not(:disabled) /template/ ContentPresenter#PART_HeaderPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource DaisyTreeSelectedForegroundBrush}" />
+    </Style>
+    <Style Selector="TreeViewItem:selected /template/ ToggleButton#PART_ExpandCollapseChevron /template/ Path#ChevronPath">
+        <Setter Property="Fill" Value="{DynamicResource DaisyTreeSelectedForegroundBrush}" />
+    </Style>
 </Styles>

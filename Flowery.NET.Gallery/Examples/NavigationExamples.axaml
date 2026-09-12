@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Flowery.Controls;assembly=Flowery.NET"
     xmlns:services="clr-namespace:Flowery.Services;assembly=Flowery.NET"
@@ -10,6 +10,18 @@
             services:FloweryResponsive.IsEnabled="True"
             services:FloweryResponsive.BaseMaxWidth="430">
             <StackPanel Spacing="24" Margin="24,0,24,32">
+
+                <!-- Native tree selection uses the active palette and Fluent template. -->
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Tree selection" FontSize="20" FontWeight="SemiBold" />
+                    <TreeView MaxWidth="430" HorizontalAlignment="Left">
+                        <TreeViewItem Header="Documents" IsExpanded="True" IsSelected="True">
+                            <TreeViewItem Header="Projects" />
+                            <TreeViewItem Header="Reports" />
+                        </TreeViewItem>
+                        <TreeViewItem Header="Archive" />
+                    </TreeView>
+                </StackPanel>
 
                 <!-- Breadcrumbs -->
                 <StackPanel Spacing="12">

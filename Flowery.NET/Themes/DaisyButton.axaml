@@ -286,7 +286,7 @@
         <!-- Link -->
         <Style Selector="^[Variant=Link]">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{DynamicResource DaisyPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyButtonPrimaryForegroundBrush}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="0" />
         </Style>
@@ -301,7 +301,7 @@
         <!-- Outline Support (Overrides previous backgrounds) -->
         <Style Selector="^[IsOutline=True][Variant=Primary]">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{DynamicResource DaisyPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyButtonPrimaryForegroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource DaisyPrimaryBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
@@ -388,7 +388,7 @@
             <Setter Property="Foreground" Value="{DynamicResource DaisyNeutralContentBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Outline][Variant=Primary]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisyPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyButtonPrimaryForegroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource DaisyPrimaryBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Outline][Variant=Primary]:pointerover /template/ Border#PART_Background">
@@ -496,7 +496,7 @@
             <Setter Property="Foreground" Value="{DynamicResource DaisyNeutralBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Dash][Variant=Primary]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisyPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyButtonPrimaryForegroundBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Dash][Variant=Primary] /template/ Rectangle#PART_DashBorder">
             <Setter Property="Stroke" Value="{DynamicResource DaisyPrimaryBrush}" />
@@ -589,7 +589,8 @@
             <Setter Property="Background" Value="{DynamicResource DaisyBase300Brush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Soft][Variant=Primary]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisyPrimaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource DaisyButtonPrimarySoftBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyButtonPrimaryForegroundBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Soft][Variant=Primary]:pointerover /template/ Border#PART_Background">
             <Setter Property="Background" Value="{DynamicResource DaisyPrimaryBrush}" />
@@ -668,6 +669,13 @@
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="0.5" />
             <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^[Variant=Primary][ButtonStyle=Default][IsOutline=False]:disabled">
+            <Setter Property="Background" Value="{DynamicResource DaisyButtonPrimaryDisabledBrush}" />
+            <Setter Property="Opacity" Value="{DynamicResource DaisyButtonPrimaryDisabledOpacity}" />
+        </Style>
+        <Style Selector="^[Variant=Primary][ButtonStyle=Default][IsOutline=False]:disabled /template/ Border#PART_Background">
+            <Setter Property="Background" Value="{DynamicResource DaisyButtonPrimaryDisabledBrush}" />
         </Style>
 
     </ControlTheme>
