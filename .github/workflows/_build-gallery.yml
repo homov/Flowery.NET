@@ -7,10 +7,9 @@ on:
   workflow_call:
     inputs:
       branch:
-        description: 'Branch to build from'
-        required: false
+        description: 'Git ref to build (branch, tag, or commit SHA)'
+        required: true
         type: string
-        default: 'main'
 
 jobs:
   build-desktop:

@@ -113,6 +113,8 @@ jobs:
   build-gallery:
     needs: validate
     uses: ./.github/workflows/_build-gallery.yml
+    with:
+      branch: ${{ github.sha }}
     permissions:
       contents: read
 
