@@ -3,7 +3,7 @@
 
 # Overview
 
-DaisyToggle is a styled `ToggleSwitch` with **8 color variants** and **4 size presets**. It offers customizable thumb size via `TogglePadding` (knob margin) and uses smooth knob animation on state changes. Use it for binary on/off controls.
+DaisyToggle is a styled `ToggleSwitch` with **8 color variants** and **5 size presets**. `TogglePadding` controls the knob inset. The knob animates when the state changes. Use it for binary on/off controls.
 
 ## Variant Options
 
@@ -15,18 +15,26 @@ DaisyToggle is a styled `ToggleSwitch` with **8 color variants** and **4 size pr
 
 ## Size Options
 
-| Size | Track (W×H) | Knob | Use Case |
-| ---- | ----------- | ---- | -------- |
-| ExtraSmall | 28×16 | 12px | Dense layouts, tables. |
-| Small | 36×20 | 16px | Compact forms. |
-| Medium (default) | 48×24 | 20px | General purpose. |
-| Large | 60×32 | 26px | Touch-friendly UIs. |
+| Size | Track (W×H) | Knob | Label font |
+| ---- | ----------- | ---- | ---------- |
+| ExtraSmall | 16×8 | 4px | 10px |
+| Small | 20×10 | 6px | 12px |
+| Medium | 24×12 | 8px | 14px |
+| Large | 28×14 | 10px | 18px |
+| ExtraLarge | 32×16 | 12px | 20px |
+
+Without an explicit `Size`, attached toggles follow `FlowerySizeManager.CurrentSize`, including runtime changes.
+Application size styles take precedence over the global default. Label text, track, and knob scale together when `FloweryScaleManager` is used.
+Scaling does not replace `FontSize` styles or bindings.
+The global default is Small. Local `Size` values and branches with `IgnoreGlobalSize=true` remain independent.
+Track, knob, and label font use size-tier tokens. Knob positions follow the current track bounds instead of fixed offsets.
+The full label row keeps its normal size-tier height for interaction.
 
 ## Additional Styling
 
 | Property | Description |
 | -------- | ----------- |
-| `TogglePadding` | Internal knob padding/margin (default 2). Adjust to tweak knob inset. |
+| `TogglePadding` | Internal knob inset (default 1). |
 
 ## Quick Examples
 

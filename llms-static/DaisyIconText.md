@@ -14,3 +14,10 @@
 ```
 
 `IconPlacement` accepts `Left`, `Right`, `Top`, and `Bottom`. `IconSize`, `FontSizeOverride`, and `Spacing` can override the values derived from `Size`.
+
+## Foreground Colors
+
+Text and icons share the control's `Foreground`. Set it explicitly to override the variant color.
+Primary, Secondary, and Accent use `DaisyPrimaryForegroundBrush`, `DaisySecondaryForegroundBrush`, and `DaisyAccentForegroundBrush`.
+These resources normally follow the corresponding palette colors. The Black theme uses `DaisyBaseContentColor` for readable text and icons.
+Foreground resources are separate from the variant fill brushes and the content brushes used on filled backgrounds.

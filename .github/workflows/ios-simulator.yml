@@ -1,0 +1,122 @@
+name: iOS Gallery Simulator
+
+# Independent, manual build and visual inspection. No release or device signing.
+on:
+  workflow_dispatch:
+    inputs:
+      device:
+        description: Simulator device
+        type: choice
+        options:
+          - iPhone 17
+          - iPad (A16)
+        default: iPhone 17
+      sections:
+        description: 'Comma-separated Gallery sidebar IDs to capture'
+        type: string
+        default: welcome,button,input,card,toggle,select
+      settle_seconds:
+        description: 'Wait after each app launch before capture (5-60 seconds)'
+        type: number
+        default: 10
+
+permissions:
+  contents: read
+
+jobs:
+  ios-simulator:
+    runs-on: macos-26
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    env:
+      # Keep this compatible pair together. Isolate the SDK from newer runner SDKs
+      # because the repository global.json permits latestFeature roll-forward.
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      IOS_PROJECT: Flowery.NET.Gallery.iOS/Flowery.NET.Gallery.iOS.csproj
+      ARTIFACT_DIR: ${{ github.workspace }}/artifacts/ios-simulator
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Prepare logs and verify Xcode
+        run: |
+          mkdir -p "$ARTIFACT_DIR/logs"
+          test -d "$DEVELOPER_DIR"
+          test -f "$IOS_PROJECT"
+          test "$(uname -m)" = arm64
+          xcodebuild -version | tee "$ARTIFACT_DIR/logs/xcode.txt"
+          xcrun simctl list --json > "$ARTIFACT_DIR/logs/simulators.json"
+
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}/flowery-ios-dotnet
+        with:
+          dotnet-version: '10.0.302'
+
+      - name: Install iOS workload for Xcode 26.6
+        run: |
+          test "$(dotnet --version)" = 10.0.302
+          dotnet --info > "$ARTIFACT_DIR/logs/dotnet.txt"
+          dotnet workload install ios --version 10.0.302.0 2>&1 | tee "$ARTIFACT_DIR/logs/workload-install.txt"
+          dotnet workload --info > "$ARTIFACT_DIR/logs/workloads.txt"
+
+      - name: Build iOS Gallery for Apple Silicon Simulator
+        id: build
+        run: |
+          dotnet build "$IOS_PROJECT" -c Release -r iossimulator-arm64 \
+            -p:EnableCodeSigning=false \
+            "-bl:$ARTIFACT_DIR/logs/ios-build.binlog" \
+            2>&1 | tee "$ARTIFACT_DIR/logs/ios-build.txt"
+          app_path=$(dotnet msbuild "$IOS_PROJECT" -nologo \
+            -p:Configuration=Release -p:RuntimeIdentifier=iossimulator-arm64 \
+            -p:EnableCodeSigning=false -getProperty:AppBundleDir)
+          test -d "$app_path"
+          printf 'app_path=%s\n' "$app_path" >> "$GITHUB_OUTPUT"
+
+      - name: Capture Gallery controls in Light and Dark
+        timeout-minutes: 15
+        env:
+          APP_PATH: ${{ steps.build.outputs.app_path }}
+          SIMULATOR_DEVICE: ${{ inputs.device }}
+          CAPTURE_SECTIONS: ${{ inputs.sections }}
+          SETTLE_SECONDS: ${{ inputs.settle_seconds }}
+        run: |
+          python3 scripts/capture_ios_simulator.py \
+            --app "$APP_PATH" --output "$ARTIFACT_DIR" \
+            --device "$SIMULATOR_DEVICE" --sections "$CAPTURE_SECTIONS" \
+            --settle-seconds "$SETTLE_SECONDS" \
+            2>&1 | tee "$ARTIFACT_DIR/logs/capture.txt"
+
+      - name: Package simulator app
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        env:
+          APP_PATH: ${{ steps.build.outputs.app_path }}
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" \
+            "$ARTIFACT_DIR/Flowery.Gallery-iOS-Simulator-arm64.zip"
+
+      - name: Upload screenshots, simulator app and diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: Flowery-Gallery-iOS-Simulator-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.ARTIFACT_DIR }}
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Summarize result
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          {
+            echo '## iOS Gallery Simulator'
+            printf 'Result: **%s**\n\n' "$JOB_STATUS"
+            echo 'Download the workflow artifact for PNG screenshots, capture metadata, build logs and the simulator app.'
+            echo 'Screenshots show the visible viewport of each selected section in Light and Dark.'
+            echo 'Review the images to assess appearance. This is not a signed device or App Store build.'
+          } >> "$GITHUB_STEP_SUMMARY"

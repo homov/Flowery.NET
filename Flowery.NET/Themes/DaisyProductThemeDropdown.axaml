@@ -1,4 +1,4 @@
-<Styles xmlns="https://github.com/avaloniaui"
+﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:Flowery.Controls;assembly=Flowery.NET">
 
@@ -13,9 +13,14 @@
     <Styles.Resources>
         <!-- Item template for product theme preview (5 dots: bg indicator + 4 colors) -->
         <DataTemplate x:Key="ProductThemeItemTemplate" DataType="controls:ProductThemePreviewInfo">
-            <Grid ColumnDefinitions="Auto,*" MinHeight="24">
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" MinHeight="24">
+                <controls:ThemeDropdownSeparator x:Name="PART_PreferredSeparator"
+                    Grid.ColumnSpan="2" Height="13" Background="Transparent"
+                    ShowSeparator="{Binding HasSeparatorBefore}">
+                    <Border Height="1" VerticalAlignment="Center" Background="{DynamicResource DaisyBase300Brush}" />
+                </controls:ThemeDropdownSeparator>
                 <!-- 5-dot horizontal swatch: base background (with border) + 4 theme colors -->
-                <Border Grid.Column="0"
+                <Border Grid.Row="1" Grid.Column="0"
                         Background="{Binding Base100}"
                         CornerRadius="6"
                         Padding="3"
@@ -31,7 +36,7 @@
                     </StackPanel>
                 </Border>
                 <!-- Theme name -->
-                <TextBlock Grid.Column="1"
+                <TextBlock Grid.Row="1" Grid.Column="1"
                     Text="{Binding DisplayName}"
                     Foreground="{DynamicResource DaisyBaseContentBrush}"
                     VerticalAlignment="Center"

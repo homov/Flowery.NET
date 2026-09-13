@@ -36,7 +36,47 @@ DaisyThemeDropdown supports all standard Flowery.NET sizes:
 | ItemsSource | Auto-populated from `DaisyThemeManager.AvailableThemes` with preview brushes from `TryCreatePalette`. |
 | Sync | Subscribes to `ThemeChanged` and `AvailableThemesChanged` so selection and the theme list stay current. |
 
+Use `DaisyThemeManager.ExcludedThemes` before creating controls, or `HideTheme` and `ShowTheme` at runtime, to control which names appear.
+Set `DaisyThemeManager.PreferredThemes = ["Business", "Dark"]` to group visible preferred themes first, sorted by display text, without selecting them.
+List updates do not apply a theme. Hiding the active theme clears the selection while retaining its `SelectedTheme` name.
+See [Theme visibility and ordering](DaisyThemeManager.md#theme-visibility-and-ordering) for examples.
+
 ## Initialization Behavior
+
+### Bound Item Sources
+
+`ItemsSource` can be bound to an `ObservableCollection<ThemePreviewInfo>` with a one-way binding.
+The control retains the original collection and binding while displaying a resolved list.
+Add, remove, move, reset, and source replacement update the displayed entries.
+Global and local theme additions still apply to that list.
+An empty external collection stays empty unless additions supply entries; setting the source to null restores the default catalog.
+Collection subscriptions are removed when the control detaches and restored when it reattaches.
+Make collection changes on the UI thread.
+
+### Mix Standard and Product Themes
+
+`AddTheme` extends this instance's existing list. Standard entries and manager additions remain available:
+
+```csharp
+themeDropdown.AddTheme("Business", "MyBusiness", false);
+themeDropdown.AddTheme("TheaterCinema", "DarkAndRed", true);
+themeDropdown.AddTheme("Corporate", "Office", true);
+```
+
+The arguments are the original theme name, the display text, and the preferred flag.
+Preferred entries appear first; both groups are sorted alphabetically by display text.
+When both groups are present, the popup shows a separator between them. The separator is not an item and cannot select or apply a theme.
+A repeated original name updates its text and flag without adding a duplicate.
+These settings affect only this dropdown and override global `DaisyThemeManager.AddTheme` settings for the same original name.
+Global exclusions remain effective. `RemoveThemeOverride(originalName)` restores the global or standard entry, if available.
+
+Adding or renaming entries does not apply a theme. Selecting `DarkAndRed` applies `TheaterCinema`; `SelectedTheme` holds `TheaterCinema`.
+**Alias responsibility:** Your application must keep its own original-name/display-name mapping if it needs to reuse, persist, or look up aliases.
+Aliases are display text only. Use original names for selection, exclusions, preferences, and theme operations; theme-name event arguments also use original names.
+Product themes added locally are registered when selected. Preview swatches use their original palette.
+Unknown names and empty labels raise `ArgumentException` without changing the list.
+
+### Initial Selection
 
 The dropdown automatically syncs to the current theme during construction:
 

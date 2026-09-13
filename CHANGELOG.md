@@ -8,6 +8,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.0] - 2026-09-13
+
+### Breaking Changes
+
+- **Smaller radio, checkbox, and toggle indicators:** `DaisyRadio`, `DaisyCheckBox`, and `DaisyToggle` now use smaller dimensions across all size tiers. Existing layouts that depend on the previous dimensions may break or need style adjustments.
+- **Migration:** Review fixed dimensions, spacing, label alignment, and existing style overrides. Adjust `Size` or override the relevant indicator tokens/styles where your application requires specific dimensions. Setting the same `Size` as before does not preserve the old dimensions.
+- **Theme color corrections:** Multiple themes now use adjusted foreground and border colors to improve readability. These changes affect the appearance of buttons, text, icons, and borders. Review custom color overrides and applications that depend on the previous palette values.
+
+### Added
+
+- Added `DaisyThemeManager.ExcludedThemes`, `HideTheme`, `ShowTheme`, and `IsThemeVisible` for startup and runtime visibility control. Both theme dropdowns refresh automatically; hidden themes remain available for direct application.
+- Added `PreferredThemes` for multiple default preferred entries and `AddTheme(originalName, displayName, preferred)` on the manager and both dropdowns. Standard and product themes can be mixed without replacing the existing lists.
+- Theme entries support display aliases and multiple preferred entries. Preferred entries appear first, with each group sorted by display text. Selection still uses the original theme name.
+- Local dropdown overrides take precedence over global settings for the same original name. `RemoveThemeOverride` restores the inherited entry without applying a theme or unregistering it.
+- Added a non-selectable separator between preferred and normal entries. Clicking it does not change selection or close the popup; keyboard navigation is unchanged.
+- Added a mixed-theme gallery example and documentation for global configuration, local overrides, runtime changes, and resetting the lists.
+- Added the manual iOS Gallery Simulator workflow to build the ARM64 simulator app on macOS and capture selected gallery sections in Light and Dark themes. Workflow artifacts include screenshots, the simulator app, and diagnostic logs.
+
+### Changed
+
+- Checkboxes, radio buttons, and toggles use compact indicators and size-tier label fonts. Their global size is a fallback below application styles, bindings, and local values; opt-out branches remain independent.
+- Selection-control labels and indicators scale together from the current size-tier resources. Font scaling no longer writes a fixed local `FontSize`.
+- Both theme dropdowns use a shared resolver for additions, exclusions, ordering, previews, and group separators. Bound item collections remain live during filtering, collection updates, and source replacement; collection subscriptions follow attachment and detachment.
+
+### Fixed
+
+- Radio buttons and toggles now have explicit ExtraLarge styling instead of falling back to Medium, so Large is no longer bigger than ExtraLarge.
+- Toggle knob positions follow the current track bounds instead of fixed offsets.
+- Checkbox, radio, and toggle label rows provide a continuous click target around their compact indicators.
+- `DaisyThemeController` checkbox mode follows the global or explicit size and scaling, using the compact checkbox tokens with a larger click area.
+- Black-theme Primary, Secondary, and Accent text uses the readable Default foreground in Outline, Dash, and Soft buttons and in `DaisyIconText`. Link buttons also use the corrected foreground; filled-button colors remain unchanged.
+- Coffee-theme Secondary and Accent foregrounds use lighter teal and blue shades in Outline, Dash, and Soft buttons and in `DaisyIconText`.
+- Cupcake-theme Primary, Secondary, and Accent foregrounds use darker turquoise, rose, and burnt-orange shades in Outline, Dash, and Soft buttons and in `DaisyIconText`. Primary Link text follows the same adjustment.
+- Dark-theme Primary foreground uses a lighter violet in Outline, Dash, Soft, and Link buttons and in `DaisyIconText`.
+- Lemonade-theme Accent foreground uses a darker mustard shade in Outline, Dash, and Soft buttons and in `DaisyIconText`.
+- Luxury-theme Secondary and Accent foregrounds use lighter blue and mauve shades in Outline, Dash, and Soft buttons and in `DaisyIconText`.
+- Pastel-theme Primary and Secondary foregrounds use darker muted purple and pink shades in Outline, Dash, and Soft buttons and in `DaisyIconText`. Primary Link text follows the same adjustment.
+- Retro-theme Primary and Secondary foregrounds use darker red and green shades in Outline, Dash, and Soft buttons and in `DaisyIconText`. Primary Link text follows the same adjustment.
+- Smooth-theme Base300 uses a lighter grey so dropdown borders, separators, and other elements using this resource are visible against its near-black backgrounds.
+- Wireframe-theme Primary, Secondary, and Accent foregrounds use dark grey in Outline, Dash, and Soft buttons and in `DaisyIconText`. Primary Link text follows the same adjustment.
+
 ## [3.2.3] - 2026-09-12
 
 ### Fixed
@@ -869,7 +910,8 @@ At least that's the plan. Happy holidays 2025!
 - Custom controls: ComponentSidebar, ModifierKeys
 - Gallery demo application
 
-[3.2.3]: https://github.com/tobitege/Flowery.NET/compare/v3.2.2...HEAD
+[3.3.0]: https://github.com/tobitege/Flowery.NET/compare/v3.2.3...HEAD
+[3.2.3]: https://github.com/tobitege/Flowery.NET/compare/v3.2.2...v3.2.3
 [3.2.2]: https://github.com/tobitege/Flowery.NET/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/tobitege/Flowery.NET/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/tobitege/Flowery.NET/compare/v3.1.1...v3.2.0

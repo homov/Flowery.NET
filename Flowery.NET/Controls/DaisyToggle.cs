@@ -1,6 +1,9 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data.Converters;
 using Flowery.Services;
 
 namespace Flowery.Controls
@@ -25,12 +28,16 @@ namespace Flowery.Controls
     {
         protected override Type StyleKeyOverride => typeof(DaisyToggle);
 
-        private const double BaseTextFontSize = 14.0;
+
+        public DaisyToggle()
+        {
+            _ = new DaisyGlobalSizeSubscription(this, SizeProperty);
+        }
 
         /// <inheritdoc/>
         public void ApplyScaleFactor(double scaleFactor)
         {
-            FontSize = FloweryScaleManager.ApplyScale(BaseTextFontSize, 11.0, scaleFactor);
+            FloweryScaleManager.SetScaleFactor(this, FloweryScaleManager.SanitizeScaleFactor(scaleFactor));
         }
 
         public static readonly StyledProperty<DaisyToggleVariant> VariantProperty =
@@ -55,12 +62,24 @@ namespace Flowery.Controls
         /// Gets or sets the internal padding of the toggle knob area (maps to --toggle-p).
         /// </summary>
         public static readonly StyledProperty<double> TogglePaddingProperty =
-            AvaloniaProperty.Register<DaisyToggle, double>(nameof(TogglePadding), 2.0);
+            AvaloniaProperty.Register<DaisyToggle, double>(nameof(TogglePadding), 1.0);
 
         public double TogglePadding
         {
             get => GetValue(TogglePaddingProperty);
             set => SetValue(TogglePaddingProperty, value);
+        }
+    }
+
+    internal sealed class ToggleKnobOffsetConverter : IMultiValueConverter
+    {
+        public static ToggleKnobOffsetConverter Instance { get; } = new();
+
+        public object Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
+        {
+            if (values.Count == 4 && values[1] is double width && values[2] is double knob && values[3] is double padding)
+                return values[0] is true ? Math.Max(padding, width - knob - padding) : padding;
+            return 0d;
         }
     }
 }

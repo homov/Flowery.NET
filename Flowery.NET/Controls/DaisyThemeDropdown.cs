@@ -1,22 +1,21 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Media;
-using Avalonia.Threading;
 using Flowery.Localization;
 using Flowery.Services;
+using Flowery.Theming;
 
 namespace Flowery.Controls
 {
     /// <summary>
     /// Contains preview information for a theme including colors and localized display name.
     /// </summary>
-    public class ThemePreviewInfo
+    public class ThemePreviewInfo : IThemeListItem
     {
         /// <summary>
         /// Internal theme name (e.g., "Synthwave"). Used as key for theme application.
@@ -27,7 +26,20 @@ namespace Flowery.Controls
         /// Localized display name for the theme (e.g., "Synth Wave" in German).
         /// Falls back to Name if no localization is available.
         /// </summary>
-        public string DisplayName => FloweryLocalization.GetThemeDisplayName(Name);
+        public string DisplayName => DisplayNameOverride ?? FloweryLocalization.GetThemeDisplayName(Name);
+
+        internal string? DisplayNameOverride { get; init; }
+
+        /// <summary>Whether the popup draws a group separator before this theme.</summary>
+        public bool HasSeparatorBefore { get; private set; }
+
+        IThemeListItem IThemeListItem.WithSeparator(bool show)
+        {
+            if (HasSeparatorBefore == show) return this;
+            var copy = (ThemePreviewInfo)MemberwiseClone();
+            copy.HasSeparatorBefore = show;
+            return copy;
+        }
 
         public bool IsDark { get; set; }
         public IBrush Base100 { get; set; } = Brushes.Gray;
@@ -77,22 +89,18 @@ namespace Flowery.Controls
             set => SetValue(SizeProperty, value);
         }
 
-        private static List<ThemePreviewInfo>? _cachedThemes;
+        private readonly ThemeDropdownSource<ThemePreviewInfo> _themeSource;
         private bool _isSyncing;
 
         public bool IsCurrentThemeDark => DaisyThemeManager.IsCurrentThemeDark;
 
-        static DaisyThemeDropdown()
-        {
-            DaisyThemeManager.AvailableThemesChanged += (_, _) => InvalidateThemeCache();
-        }
 
         /// <summary>
         /// Clears cached preview entries so they are rebuilt on the next read.
         /// </summary>
         public static void InvalidateThemeCache()
         {
-            _cachedThemes = null;
+            ThemeListResolver.InvalidateStandardThemes();
         }
 
         public DaisyThemeDropdown()
@@ -100,8 +108,10 @@ namespace Flowery.Controls
             // Enable keyboard navigation by DisplayName (e.g., press 'S' to jump to "Synthwave")
             TextSearch.SetTextBinding(this, new Binding(nameof(ThemePreviewInfo.DisplayName)));
 
-            var themes = GetThemeInfos();
-            ItemsSource = themes;
+            _themeSource = new ThemeDropdownSource<ThemePreviewInfo>(this,
+                ThemeListResolver.StandardThemes, ThemeListResolver.CreatePreview, EnsureItemsSourceCurrent);
+            var themes = _themeSource.Resolve();
+            _themeSource.SetView(themes);
 
             // Sync to current theme if one is already set by the app
             var currentTheme = DaisyThemeManager.CurrentThemeName;
@@ -124,71 +134,39 @@ namespace Flowery.Controls
             }
         }
 
-        private void SyncToTheme(string themeName, List<ThemePreviewInfo>? themes = null)
+        private void SyncToTheme(string themeName, IEnumerable<ThemePreviewInfo>? themes = null)
         {
-            themes ??= GetThemeInfos();
+            if (_isSyncing) return;
+            themes ??= ItemsSource as IEnumerable<ThemePreviewInfo> ?? _themeSource.Resolve();
             var match = themes.FirstOrDefault(t => string.Equals(t.Name, themeName, StringComparison.OrdinalIgnoreCase));
-            if (match != null && SelectedItem != match)
+            _isSyncing = true;
+            try
             {
-                _isSyncing = true;
-                try
-                {
-                    SelectedItem = match;
-                    SelectedTheme = match.Name;
-                }
-                finally
-                {
-                    _isSyncing = false;
-                }
+                SetCurrentValue(SelectedItemProperty, match);
+                SetCurrentValue(SelectedThemeProperty, match?.Name ?? themeName);
+            }
+            finally
+            {
+                _isSyncing = false;
             }
         }
 
-        private static List<ThemePreviewInfo> GetThemeInfos()
-        {
-            if (_cachedThemes != null) return _cachedThemes;
+        /// <summary>
+        /// Adds a standard, registered, or product theme to this dropdown without replacing
+        /// the standard list. Repeated original names update the entry without duplicating it.
+        /// Call on the UI thread. This does not select, apply, or register a theme.
+        /// </summary>
+        /// <param name="originalName">Original theme name, matched case-insensitively.</param>
+        /// <param name="displayName">Text shown only in this dropdown.</param>
+        /// <param name="preferred">Whether to place the entry in the preferred group at the top.</param>
+        /// <exception cref="ArgumentException">A name is empty or the original theme is unknown.</exception>
+        public void AddTheme(string originalName, string displayName, bool preferred) =>
+            _themeSource.Add(originalName, displayName, preferred);
 
-            _cachedThemes = new List<ThemePreviewInfo>();
-
-            foreach (var themeInfo in DaisyThemeManager.AvailableThemes)
-            {
-                var preview = new ThemePreviewInfo { Name = themeInfo.Name, IsDark = themeInfo.IsDark };
-
-                if (DaisyThemeManager.TryCreatePalette(themeInfo.Name, out var palette) && palette != null)
-                {
-                    ApplyPreviewBrushes(preview, palette);
-                }
-
-                _cachedThemes.Add(preview);
-            }
-
-            return _cachedThemes;
-        }
-
-        private static void ApplyPreviewBrushes(ThemePreviewInfo preview, ResourceDictionary palette)
-        {
-            if (TryGetBrush(palette, "DaisyBase100Brush", out var base100))
-                preview.Base100 = base100;
-            if (TryGetBrush(palette, "DaisyBaseContentBrush", out var baseContent))
-                preview.BaseContent = baseContent;
-            if (TryGetBrush(palette, "DaisyPrimaryBrush", out var primary))
-                preview.Primary = primary;
-            if (TryGetBrush(palette, "DaisySecondaryBrush", out var secondary))
-                preview.Secondary = secondary;
-            if (TryGetBrush(palette, "DaisyAccentBrush", out var accent))
-                preview.Accent = accent;
-        }
-
-        private static bool TryGetBrush(ResourceDictionary palette, string key, out IBrush brush)
-        {
-            if (palette.TryGetResource(key, null, out var value) && value is IBrush found)
-            {
-                brush = found;
-                return true;
-            }
-
-            brush = Brushes.Gray;
-            return false;
-        }
+        /// <summary>
+        /// Removes a local entry override and restores the manager's list entry, if available.
+        /// </summary>
+        public bool RemoveThemeOverride(string originalName) => _themeSource.Remove(originalName);
 
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
@@ -196,7 +174,7 @@ namespace Flowery.Controls
 
             if (change.Property == SelectedItemProperty && change.NewValue is ThemePreviewInfo themeInfo)
             {
-                SelectedTheme = themeInfo.Name;
+                SetCurrentValue(SelectedThemeProperty, themeInfo.Name);
                 if (!_isSyncing)
                 {
                     ApplyTheme(themeInfo);
@@ -206,6 +184,11 @@ namespace Flowery.Controls
 
         private void ApplyTheme(ThemePreviewInfo themeInfo)
         {
+            if (DaisyThemeManager.GetThemeInfo(themeInfo.Name) == null &&
+                ProductPaletteFactory.FindByName(themeInfo.Name) is { } product)
+            {
+                DaisyThemeManager.EnsureProductThemeRegistered(product);
+            }
             DaisyThemeManager.ApplyTheme(themeInfo.Name);
         }
 
@@ -213,9 +196,7 @@ namespace Flowery.Controls
         {
             base.OnAttachedToVisualTree(e);
             DaisyThemeManager.ThemeChanged += OnThemeChanged;
-            DaisyThemeManager.AvailableThemesChanged += OnAvailableThemesChanged;
-            FloweryLocalization.CultureChanged += OnCultureChanged;
-            EnsureItemsSourceCurrent();
+            _themeSource.Attach();
             SyncWithCurrentTheme();
         }
 
@@ -223,21 +204,9 @@ namespace Flowery.Controls
         {
             base.OnDetachedFromVisualTree(e);
             DaisyThemeManager.ThemeChanged -= OnThemeChanged;
-            DaisyThemeManager.AvailableThemesChanged -= OnAvailableThemesChanged;
-            FloweryLocalization.CultureChanged -= OnCultureChanged;
+            _themeSource.Detach();
         }
 
-        private void OnCultureChanged(object? sender, CultureInfo culture)
-        {
-            if (!Dispatcher.UIThread.CheckAccess())
-            {
-                Dispatcher.UIThread.Post(() => OnCultureChanged(sender, culture));
-                return;
-            }
-
-            // Force UI refresh when culture changes (DisplayName property will return new value)
-            InvalidateVisual();
-        }
 
         private void OnThemeChanged(object? sender, string themeName)
         {
@@ -245,25 +214,21 @@ namespace Flowery.Controls
             SyncWithCurrentTheme();
         }
 
-        private void OnAvailableThemesChanged(object? sender, EventArgs e)
-        {
-            if (!Dispatcher.UIThread.CheckAccess())
-            {
-                Dispatcher.UIThread.Post(() => OnAvailableThemesChanged(sender, e));
-                return;
-            }
-
-            EnsureItemsSourceCurrent();
-            SyncWithCurrentTheme();
-        }
-
         private void EnsureItemsSourceCurrent()
         {
-            var themes = GetThemeInfos();
-            if (!ReferenceEquals(ItemsSource, themes))
+            var themes = _themeSource.Resolve();
+            var themeName = DaisyThemeManager.CurrentThemeName ?? SelectedTheme;
+            var wasSyncing = _isSyncing;
+            _isSyncing = true;
+            try
             {
-                ItemsSource = themes;
+                _themeSource.SetView(themes);
             }
+            finally
+            {
+                _isSyncing = wasSyncing;
+            }
+            SyncToTheme(themeName, themes);
         }
 
         private void SyncWithCurrentTheme()

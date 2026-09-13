@@ -16,13 +16,20 @@ DaisyCheckBox is a styled checkbox with **9 color variants** and **5 size preset
 
 ## Size Options
 
-| Size | Box (approx) | Check | Use Case |
-| ---- | ------------ | ----- | -------- |
-| ExtraSmall | 16px | 10px | Dense tables/toolbars. |
-| Small | 20px | 12px | Compact forms. |
-| Medium (default) | 24px | 16px | General usage. |
-| Large | 32px | 20px | Spacious layouts, cards. |
-| ExtraLarge | 40px | 24px | Hero sections or touch targets. |
+| Size | Box | Check | Label font |
+| ---- | --- | ----- | ---------- |
+| ExtraSmall | 8px | 5px | 10px |
+| Small | 10px | 6px | 12px |
+| Medium | 12px | 8px | 14px |
+| Large | 14px | 10px | 18px |
+| ExtraLarge | 16px | 12px | 20px |
+
+Without an explicit `Size`, attached checkboxes follow `FlowerySizeManager.CurrentSize`, including runtime changes.
+Size values supplied by application styles also take precedence over the global default.
+With `FloweryScaleManager`, label text and the indicator scale together from the current size-tier resources. Scaling does not replace `FontSize` styles or bindings.
+The global default is Small. Local `Size` values and branches with `IgnoreGlobalSize=true` remain independent.
+Labels use the manager's primary font sizes. Indicator size, checkmark size, and label font have separate checkbox tokens.
+The control retains the normal size-tier row height for clicking the label; only the visual indicator is compact.
 
 ## Quick Examples
 

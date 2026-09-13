@@ -15,13 +15,20 @@ DaisyRadio is a styled `RadioButton` with **8 color variants** and **5 size pres
 
 ## Size Options
 
-| Size | Outer | Inner | Use Case |
-| ---- | ----- | ----- | -------- |
-| ExtraSmall | 16px | 8px | Dense tables/toolbars. |
-| Small | 20px | 12px | Compact forms. |
-| Medium (default) | 24px | 14px | General usage. |
-| Large | 32px | 20px | Spacious layouts or touch targets. |
-| ExtraLarge | Falls back to Medium styling (no explicit theme overrides). |
+| Size | Outer | Inner | Label font |
+| ---- | ----- | ----- | ---------- |
+| ExtraSmall | 8px | 4px | 10px |
+| Small | 10px | 5px | 12px |
+| Medium | 12px | 6px | 14px |
+| Large | 14px | 7px | 18px |
+| ExtraLarge | 16px | 8px | 20px |
+
+All five sizes have explicit styles. The indicator stays smaller than the label font and grows with each tier.
+Without a local `Size`, attached radios follow `FlowerySizeManager.CurrentSize`, including runtime changes.
+Application size styles take precedence over the global default. Label text and the indicator scale together when `FloweryScaleManager` is used.
+Scaling does not replace `FontSize` styles or bindings.
+Explicit sizes and branches with `IgnoreGlobalSize=true` remain independent.
+The full label row stays clickable, and `GroupName` retains normal radio selection behavior.
 
 ## Quick Examples
 

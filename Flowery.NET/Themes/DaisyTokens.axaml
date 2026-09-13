@@ -188,45 +188,71 @@
     <Thickness x:Key="DaisyBorderThicknessThick">3</Thickness>
 
     <!-- ==================== CHECKBOX/RADIO INDICATOR SIZES ==================== -->
-    <!-- Outer border size for checkboxes and radio buttons -->
-    <sys:Double x:Key="DaisyCheckboxExtraLargeSize">40</sys:Double>
-    <sys:Double x:Key="DaisyCheckboxLargeSize">32</sys:Double>
-    <sys:Double x:Key="DaisyCheckboxMediumSize">24</sys:Double>
-    <sys:Double x:Key="DaisyCheckboxSmallSize">20</sys:Double>
-    <sys:Double x:Key="DaisyCheckboxExtraSmallSize">16</sys:Double>
+    <!-- Checkbox indicators are smaller than their size-tier label text. -->
+    <sys:Double x:Key="DaisyCheckboxExtraLargeSize">16</sys:Double>
+    <sys:Double x:Key="DaisyCheckboxLargeSize">14</sys:Double>
+    <sys:Double x:Key="DaisyCheckboxMediumSize">12</sys:Double>
+    <sys:Double x:Key="DaisyCheckboxSmallSize">10</sys:Double>
+    <sys:Double x:Key="DaisyCheckboxExtraSmallSize">8</sys:Double>
+
+    <!-- Match FlowerySizeManager's primary text sizes. -->
+    <sys:Double x:Key="DaisyCheckboxExtraLargeFontSize">20</sys:Double>
+    <sys:Double x:Key="DaisyCheckboxLargeFontSize">18</sys:Double>
+    <sys:Double x:Key="DaisyCheckboxMediumFontSize">14</sys:Double>
+    <sys:Double x:Key="DaisyCheckboxSmallFontSize">12</sys:Double>
+    <sys:Double x:Key="DaisyCheckboxExtraSmallFontSize">10</sys:Double>
 
     <!-- Checkmark icon sizes (proportional to checkbox) -->
-    <sys:Double x:Key="DaisyCheckmarkExtraLargeSize">24</sys:Double>
-    <sys:Double x:Key="DaisyCheckmarkLargeSize">20</sys:Double>
-    <sys:Double x:Key="DaisyCheckmarkMediumSize">16</sys:Double>
-    <sys:Double x:Key="DaisyCheckmarkSmallSize">12</sys:Double>
-    <sys:Double x:Key="DaisyCheckmarkExtraSmallSize">10</sys:Double>
+    <sys:Double x:Key="DaisyCheckmarkExtraLargeSize">12</sys:Double>
+    <sys:Double x:Key="DaisyCheckmarkLargeSize">10</sys:Double>
+    <sys:Double x:Key="DaisyCheckmarkMediumSize">8</sys:Double>
+    <sys:Double x:Key="DaisyCheckmarkSmallSize">6</sys:Double>
+    <sys:Double x:Key="DaisyCheckmarkExtraSmallSize">5</sys:Double>
+
+    <!-- Radio outer sizes remain independent of checkbox sizing. -->
+    <sys:Double x:Key="DaisyRadioExtraLargeSize">16</sys:Double>
+    <sys:Double x:Key="DaisyRadioLargeSize">14</sys:Double>
+    <sys:Double x:Key="DaisyRadioMediumSize">12</sys:Double>
+    <sys:Double x:Key="DaisyRadioSmallSize">10</sys:Double>
+    <sys:Double x:Key="DaisyRadioExtraSmallSize">8</sys:Double>
+
+    <sys:Double x:Key="DaisyRadioExtraLargeFontSize">20</sys:Double>
+    <sys:Double x:Key="DaisyRadioLargeFontSize">18</sys:Double>
+    <sys:Double x:Key="DaisyRadioMediumFontSize">14</sys:Double>
+    <sys:Double x:Key="DaisyRadioSmallFontSize">12</sys:Double>
+    <sys:Double x:Key="DaisyRadioExtraSmallFontSize">10</sys:Double>
 
     <!-- Radio inner dot sizes -->
-    <sys:Double x:Key="DaisyRadioDotExtraLargeSize">24</sys:Double>
-    <sys:Double x:Key="DaisyRadioDotLargeSize">20</sys:Double>
-    <sys:Double x:Key="DaisyRadioDotMediumSize">14</sys:Double>
-    <sys:Double x:Key="DaisyRadioDotSmallSize">12</sys:Double>
-    <sys:Double x:Key="DaisyRadioDotExtraSmallSize">8</sys:Double>
+    <sys:Double x:Key="DaisyRadioDotExtraLargeSize">8</sys:Double>
+    <sys:Double x:Key="DaisyRadioDotLargeSize">7</sys:Double>
+    <sys:Double x:Key="DaisyRadioDotMediumSize">6</sys:Double>
+    <sys:Double x:Key="DaisyRadioDotSmallSize">5</sys:Double>
+    <sys:Double x:Key="DaisyRadioDotExtraSmallSize">4</sys:Double>
 
     <!-- ==================== TOGGLE SWITCH SIZES ==================== -->
-    <sys:Double x:Key="DaisyToggleExtraLargeWidth">72</sys:Double>
-    <sys:Double x:Key="DaisyToggleExtraLargeHeight">40</sys:Double>
-    <sys:Double x:Key="DaisyToggleLargeWidth">60</sys:Double>
-    <sys:Double x:Key="DaisyToggleLargeHeight">32</sys:Double>
-    <sys:Double x:Key="DaisyToggleMediumWidth">48</sys:Double>
-    <sys:Double x:Key="DaisyToggleMediumHeight">24</sys:Double>
-    <sys:Double x:Key="DaisyToggleSmallWidth">36</sys:Double>
-    <sys:Double x:Key="DaisyToggleSmallHeight">20</sys:Double>
-    <sys:Double x:Key="DaisyToggleExtraSmallWidth">32</sys:Double>
-    <sys:Double x:Key="DaisyToggleExtraSmallHeight">18</sys:Double>
+    <sys:Double x:Key="DaisyToggleExtraLargeWidth">32</sys:Double>
+    <sys:Double x:Key="DaisyToggleExtraLargeHeight">16</sys:Double>
+    <sys:Double x:Key="DaisyToggleLargeWidth">28</sys:Double>
+    <sys:Double x:Key="DaisyToggleLargeHeight">14</sys:Double>
+    <sys:Double x:Key="DaisyToggleMediumWidth">24</sys:Double>
+    <sys:Double x:Key="DaisyToggleMediumHeight">12</sys:Double>
+    <sys:Double x:Key="DaisyToggleSmallWidth">20</sys:Double>
+    <sys:Double x:Key="DaisyToggleSmallHeight">10</sys:Double>
+    <sys:Double x:Key="DaisyToggleExtraSmallWidth">16</sys:Double>
+    <sys:Double x:Key="DaisyToggleExtraSmallHeight">8</sys:Double>
+
+    <sys:Double x:Key="DaisyToggleExtraLargeFontSize">20</sys:Double>
+    <sys:Double x:Key="DaisyToggleLargeFontSize">18</sys:Double>
+    <sys:Double x:Key="DaisyToggleMediumFontSize">14</sys:Double>
+    <sys:Double x:Key="DaisyToggleSmallFontSize">12</sys:Double>
+    <sys:Double x:Key="DaisyToggleExtraSmallFontSize">10</sys:Double>
 
     <!-- Toggle knob sizes -->
-    <sys:Double x:Key="DaisyToggleKnobExtraLargeSize">32</sys:Double>
-    <sys:Double x:Key="DaisyToggleKnobLargeSize">26</sys:Double>
-    <sys:Double x:Key="DaisyToggleKnobMediumSize">20</sys:Double>
-    <sys:Double x:Key="DaisyToggleKnobSmallSize">16</sys:Double>
-    <sys:Double x:Key="DaisyToggleKnobExtraSmallSize">14</sys:Double>
+    <sys:Double x:Key="DaisyToggleKnobExtraLargeSize">12</sys:Double>
+    <sys:Double x:Key="DaisyToggleKnobLargeSize">10</sys:Double>
+    <sys:Double x:Key="DaisyToggleKnobMediumSize">8</sys:Double>
+    <sys:Double x:Key="DaisyToggleKnobSmallSize">6</sys:Double>
+    <sys:Double x:Key="DaisyToggleKnobExtraSmallSize">4</sys:Double>
 
     <!-- ==================== PROGRESS BAR HEIGHTS ==================== -->
     <sys:Double x:Key="DaisyProgressLargeHeight">16</sys:Double>

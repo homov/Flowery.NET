@@ -85,17 +85,17 @@
 
         <!-- Variant: Primary -->
         <Style Selector="^[Variant=Primary]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisyPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyPrimaryForegroundBrush}" />
         </Style>
 
         <!-- Variant: Secondary -->
         <Style Selector="^[Variant=Secondary]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryForegroundBrush}" />
         </Style>
 
         <!-- Variant: Accent -->
         <Style Selector="^[Variant=Accent]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisyAccentBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyAccentForegroundBrush}" />
         </Style>
 
         <!-- Variant: Neutral -->

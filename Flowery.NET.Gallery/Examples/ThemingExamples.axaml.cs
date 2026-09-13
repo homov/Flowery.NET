@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
@@ -14,6 +14,9 @@ public partial class ThemingExamples : UserControl, IScrollableExample
     public ThemingExamples()
     {
         InitializeComponent();
+        MixedThemeDropdown.AddTheme("Business", "MyBusiness", false);
+        MixedThemeDropdown.AddTheme("TheaterCinema", "DarkAndRed", true);
+        MixedThemeDropdown.AddTheme("Corporate", "Office", true);
     }
 
     public void ScrollToSection(string sectionName)

@@ -1,4 +1,4 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- SmoothUI Dark Theme Palette -->
     <!-- Derived from smoothui.css oklch colors -->
@@ -40,7 +40,7 @@
     <SolidColorBrush x:Key="DaisyBase100Brush" Color="{StaticResource DaisyBase100Color}" />
     <Color x:Key="DaisyBase200Color">#040404</Color>
     <SolidColorBrush x:Key="DaisyBase200Brush" Color="{StaticResource DaisyBase200Color}" />
-    <Color x:Key="DaisyBase300Color">#0C0C0C</Color>
+    <Color x:Key="DaisyBase300Color">#555555</Color>
     <SolidColorBrush x:Key="DaisyBase300Brush" Color="{StaticResource DaisyBase300Color}" />
     <Color x:Key="DaisyBaseContentColor">#D7D7D7</Color>
     <SolidColorBrush x:Key="DaisyBaseContentBrush" Color="{StaticResource DaisyBaseContentColor}" />

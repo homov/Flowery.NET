@@ -1,4 +1,4 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- DaisyUI Lemonade Theme Palette -->
     <!-- Primary -->
@@ -24,6 +24,7 @@
     <SolidColorBrush x:Key="DaisyAccentFocusBrush" Color="{StaticResource DaisyAccentFocusColor}" />
     <Color x:Key="DaisyAccentContentColor">#141000</Color>
     <SolidColorBrush x:Key="DaisyAccentContentBrush" Color="{StaticResource DaisyAccentContentColor}" />
+    <SolidColorBrush x:Key="DaisyAccentForegroundBrush" Color="#756500" />
 
     <!-- Neutral -->
     <Color x:Key="DaisyNeutralColor">#343300</Color>

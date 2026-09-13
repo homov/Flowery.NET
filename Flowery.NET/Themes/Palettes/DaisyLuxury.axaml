@@ -1,4 +1,4 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- DaisyUI Luxury Theme Palette -->
     <!-- Primary -->
@@ -16,6 +16,7 @@
     <SolidColorBrush x:Key="DaisySecondaryFocusBrush" Color="{StaticResource DaisySecondaryFocusColor}" />
     <Color x:Key="DaisySecondaryContentColor">#CBD0D7</Color>
     <SolidColorBrush x:Key="DaisySecondaryContentBrush" Color="{StaticResource DaisySecondaryContentColor}" />
+    <SolidColorBrush x:Key="DaisySecondaryForegroundBrush" Color="#8BA8D8" />
 
     <!-- Accent -->
     <Color x:Key="DaisyAccentColor">#513448</Color>
@@ -24,6 +25,7 @@
     <SolidColorBrush x:Key="DaisyAccentFocusBrush" Color="{StaticResource DaisyAccentFocusColor}" />
     <Color x:Key="DaisyAccentContentColor">#DAD3D7</Color>
     <SolidColorBrush x:Key="DaisyAccentContentBrush" Color="{StaticResource DaisyAccentContentColor}" />
+    <SolidColorBrush x:Key="DaisyAccentForegroundBrush" Color="#C394B5" />
 
     <!-- Neutral -->
     <Color x:Key="DaisyNeutralColor">#331800</Color>

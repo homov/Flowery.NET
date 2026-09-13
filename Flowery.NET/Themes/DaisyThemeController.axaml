@@ -1,6 +1,7 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:Flowery.Controls;assembly=Flowery.NET">
+                    xmlns:controls="clr-namespace:Flowery.Controls;assembly=Flowery.NET"
+                    xmlns:services="clr-namespace:Flowery.Services;assembly=Flowery.NET">
 
     <Design.PreviewWith>
         <Border Padding="20" Background="{DynamicResource DaisyBase100Brush}">
@@ -41,26 +42,29 @@
                     </Border>
 
                     <!-- Mode: Checkbox -->
-                    <Border x:Name="CheckboxMode"
-                            IsVisible="False"
-                            Width="48" Height="48"
-                            CornerRadius="8"
-                            Background="{DynamicResource DaisyBase300Brush}">
-                        <Path x:Name="CheckMark"
-                              Stretch="Uniform"
-                              Width="24" Height="24"
-                              Fill="{DynamicResource DaisyBaseContentBrush}"
-                              Data="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
-                              Opacity="0"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Center">
-                            <Path.Transitions>
-                                <Transitions>
-                                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
-                                </Transitions>
-                            </Path.Transitions>
-                        </Path>
-                    </Border>
+                    <LayoutTransformControl HorizontalAlignment="Center" VerticalAlignment="Center"
+                        LayoutTransform="{Binding (services:FloweryScaleManager.ScaleFactor), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static controls:SelectionControlScale.Indicator}}">
+                        <Border x:Name="CheckboxMode"
+                                IsVisible="False"
+                                Width="{DynamicResource DaisyCheckboxMediumSize}" Height="{DynamicResource DaisyCheckboxMediumSize}"
+                                CornerRadius="2"
+                                Background="{DynamicResource DaisyBase300Brush}">
+                            <Path x:Name="CheckMark"
+                                  Stretch="Uniform"
+                                  Width="{DynamicResource DaisyCheckmarkMediumSize}" Height="{DynamicResource DaisyCheckmarkMediumSize}"
+                                  Fill="{DynamicResource DaisyBaseContentBrush}"
+                                  Data="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
+                                  Opacity="0"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center">
+                                <Path.Transitions>
+                                    <Transitions>
+                                        <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                                    </Transitions>
+                                </Path.Transitions>
+                            </Path>
+                        </Border>
+                    </LayoutTransformControl>
 
                     <!-- Mode: Swap (sun/moon icons) -->
                     <Grid x:Name="SwapMode" IsVisible="False" Width="32" Height="32">
@@ -167,6 +171,60 @@
                 </Grid>
             </ControlTemplate>
         </Setter>
+
+        <!-- Keep the checkbox hit area larger than its compact indicator. -->
+        <Style Selector="^[Mode=Checkbox]">
+            <Setter Property="MinWidth" Value="{DynamicResource DaisySizeMediumHeight}" />
+            <Setter Property="MinHeight" Value="{DynamicResource DaisySizeMediumHeight}" />
+        </Style>
+        <Style Selector="^[Mode=Checkbox][Size=ExtraSmall]">
+            <Setter Property="MinWidth" Value="{DynamicResource DaisySizeExtraSmallHeight}" />
+            <Setter Property="MinHeight" Value="{DynamicResource DaisySizeExtraSmallHeight}" />
+        </Style>
+        <Style Selector="^[Mode=Checkbox][Size=Small]">
+            <Setter Property="MinWidth" Value="{DynamicResource DaisySizeSmallHeight}" />
+            <Setter Property="MinHeight" Value="{DynamicResource DaisySizeSmallHeight}" />
+        </Style>
+        <Style Selector="^[Mode=Checkbox][Size=Large]">
+            <Setter Property="MinWidth" Value="{DynamicResource DaisySizeLargeHeight}" />
+            <Setter Property="MinHeight" Value="{DynamicResource DaisySizeLargeHeight}" />
+        </Style>
+        <Style Selector="^[Mode=Checkbox][Size=ExtraLarge]">
+            <Setter Property="MinWidth" Value="{DynamicResource DaisySizeExtraLargeHeight}" />
+            <Setter Property="MinHeight" Value="{DynamicResource DaisySizeExtraLargeHeight}" />
+        </Style>
+        <Style Selector="^[Size=ExtraSmall] /template/ Border#CheckboxMode">
+            <Setter Property="Width" Value="{DynamicResource DaisyCheckboxExtraSmallSize}" />
+            <Setter Property="Height" Value="{DynamicResource DaisyCheckboxExtraSmallSize}" />
+        </Style>
+        <Style Selector="^[Size=Small] /template/ Border#CheckboxMode">
+            <Setter Property="Width" Value="{DynamicResource DaisyCheckboxSmallSize}" />
+            <Setter Property="Height" Value="{DynamicResource DaisyCheckboxSmallSize}" />
+        </Style>
+        <Style Selector="^[Size=Large] /template/ Border#CheckboxMode">
+            <Setter Property="Width" Value="{DynamicResource DaisyCheckboxLargeSize}" />
+            <Setter Property="Height" Value="{DynamicResource DaisyCheckboxLargeSize}" />
+        </Style>
+        <Style Selector="^[Size=ExtraLarge] /template/ Border#CheckboxMode">
+            <Setter Property="Width" Value="{DynamicResource DaisyCheckboxExtraLargeSize}" />
+            <Setter Property="Height" Value="{DynamicResource DaisyCheckboxExtraLargeSize}" />
+        </Style>
+        <Style Selector="^[Size=ExtraSmall] /template/ Path#CheckMark">
+            <Setter Property="Width" Value="{DynamicResource DaisyCheckmarkExtraSmallSize}" />
+            <Setter Property="Height" Value="{DynamicResource DaisyCheckmarkExtraSmallSize}" />
+        </Style>
+        <Style Selector="^[Size=Small] /template/ Path#CheckMark">
+            <Setter Property="Width" Value="{DynamicResource DaisyCheckmarkSmallSize}" />
+            <Setter Property="Height" Value="{DynamicResource DaisyCheckmarkSmallSize}" />
+        </Style>
+        <Style Selector="^[Size=Large] /template/ Path#CheckMark">
+            <Setter Property="Width" Value="{DynamicResource DaisyCheckmarkLargeSize}" />
+            <Setter Property="Height" Value="{DynamicResource DaisyCheckmarkLargeSize}" />
+        </Style>
+        <Style Selector="^[Size=ExtraLarge] /template/ Path#CheckMark">
+            <Setter Property="Width" Value="{DynamicResource DaisyCheckmarkExtraLargeSize}" />
+            <Setter Property="Height" Value="{DynamicResource DaisyCheckmarkExtraLargeSize}" />
+        </Style>
 
         <!-- Mode visibility selectors -->
         <Style Selector="^[Mode=Toggle] /template/ Border#ToggleMode">

@@ -1,7 +1,6 @@
-using System;
+﻿using System;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Data;
 using Flowery.Services;
 
 namespace Flowery.Controls
@@ -27,12 +26,15 @@ namespace Flowery.Controls
     {
         protected override Type StyleKeyOverride => typeof(DaisyCheckBox);
 
-        private const double BaseTextFontSize = 14.0;
+        public DaisyCheckBox()
+        {
+            _ = new DaisyGlobalSizeSubscription(this, SizeProperty);
+        }
 
         /// <inheritdoc/>
         public void ApplyScaleFactor(double scaleFactor)
         {
-            FontSize = FloweryScaleManager.ApplyScale(BaseTextFontSize, 11.0, scaleFactor);
+            FloweryScaleManager.SetScaleFactor(this, FloweryScaleManager.SanitizeScaleFactor(scaleFactor));
         }
 
         public static readonly StyledProperty<DaisyCheckBoxVariant> VariantProperty =
@@ -52,5 +54,6 @@ namespace Flowery.Controls
             get => GetValue(SizeProperty);
             set => SetValue(SizeProperty, value);
         }
+
     }
 }

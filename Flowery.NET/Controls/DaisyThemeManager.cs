@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
+using Flowery.Helpers;
 using Flowery.Theming;
 
 namespace Flowery.Controls
@@ -41,6 +42,142 @@ namespace Flowery.Controls
         private static ResourceDictionary? _currentPalette;
         private static string? _currentThemeName;
         private static string _baseThemeName = "Dark";
+        private static HashSet<string> _excludedThemes = new(StringComparer.OrdinalIgnoreCase);
+        private static HashSet<string> _preferredThemes = new(StringComparer.OrdinalIgnoreCase);
+        internal sealed record ThemeEntry(string Name, string DisplayName, bool Preferred, ProductPalette? ProductPalette);
+        private static readonly Dictionary<string, ThemeEntry> AddedThemes = new(StringComparer.OrdinalIgnoreCase);
+        internal static IReadOnlyDictionary<string, ThemeEntry> ThemeOverrides => AddedThemes;
+
+        /// <summary>
+        /// Adds or updates a theme in both dropdowns globally. Local dropdown overrides take
+        /// precedence. Product themes are registered without applying their palette.
+        /// Call before creating controls or on the UI thread at runtime.
+        /// </summary>
+        /// <param name="originalName">Original registered or product theme name, matched case-insensitively.</param>
+        /// <param name="displayName">Default text displayed by the dropdowns.</param>
+        /// <param name="preferred">Whether to place the theme in the preferred group, sorted by display name.</param>
+        public static void AddTheme(string originalName, string displayName, bool preferred)
+        {
+            var entry = CreateThemeEntry(originalName, displayName, preferred);
+            if (AddedThemes.TryGetValue(entry.Name, out var existing) && existing == entry) return;
+            AddedThemes[entry.Name] = entry;
+            if (GetThemeInfo(entry.Name) == null && entry.ProductPalette is { } product)
+                EnsureProductThemeRegistered(product);
+            else
+                NotifyThemeListChanged();
+        }
+
+        /// <summary>
+        /// Removes global display and ordering overrides. Registered themes remain registered.
+        /// Call on the UI thread once controls exist. Returns true when an override was removed.
+        /// </summary>
+        public static bool RemoveThemeOverride(string originalName)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(originalName);
+            if (!AddedThemes.Remove(originalName)) return false;
+            NotifyThemeListChanged();
+            return true;
+        }
+
+        internal static ThemeEntry CreateThemeEntry(string originalName, string displayName, bool preferred)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(originalName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(displayName);
+            var registered = GetThemeInfo(originalName);
+            var product = ProductPaletteFactory.FindByName(originalName);
+            var name = registered?.Name ?? product?.Name
+                ?? throw new ArgumentException($"Unknown theme '{originalName}'.", nameof(originalName));
+            return new ThemeEntry(name, displayName, preferred, product);
+        }
+
+        /// <summary>
+        /// Theme names hidden from both theme dropdowns. Assign before constructing the UI,
+        /// or replace on the UI thread at runtime. The getter returns a read-only snapshot.
+        /// Names are case-insensitive and may refer to themes not yet registered.
+        /// This does not prevent <see cref="ApplyTheme"/> from applying a hidden theme.
+        /// </summary>
+        public static IReadOnlyCollection<string> ExcludedThemes
+        {
+            get => _excludedThemes.ToList().AsReadOnly();
+            set
+            {
+                ArgumentNullException.ThrowIfNull(value);
+                var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var name in value)
+                {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(name);
+                    names.Add(name);
+                }
+
+                if (_excludedThemes.SetEquals(names)) return;
+                _excludedThemes = names;
+                NotifyThemeListChanged();
+            }
+        }
+
+        /// <summary>
+        /// Theme names shown in the preferred group, sorted by display text.
+        /// An empty collection clears these defaults. Explicit AddTheme flags override them.
+        /// Names are case-insensitive; the getter returns a read-only snapshot.
+        /// Exclusion takes precedence. This neither selects nor applies a theme.
+        /// Set before constructing the UI or on the UI thread at runtime.
+        /// </summary>
+        public static IReadOnlyCollection<string> PreferredThemes
+        {
+            get => new ReadOnlyCollection<string>([.. _preferredThemes]);
+            set
+            {
+                ArgumentNullException.ThrowIfNull(value);
+                var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var name in value)
+                {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(name);
+                    names.Add(name);
+                }
+
+                if (_preferredThemes.SetEquals(names)) return;
+                _preferredThemes = names;
+                NotifyThemeListChanged();
+            }
+        }
+
+        internal static bool IsThemePreferred(string themeName) => _preferredThemes.Contains(themeName);
+
+        /// <summary>
+        /// Hides a theme from both dropdowns, including themes registered later.
+        /// Call on the UI thread once the UI exists. Returns true if the exclusion changed.
+        /// </summary>
+        public static bool HideTheme(string themeName)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(themeName);
+            if (!_excludedThemes.Add(themeName)) return false;
+            NotifyThemeListChanged();
+            return true;
+        }
+
+        /// <summary>
+        /// Removes a theme exclusion. Call on the UI thread once the UI exists.
+        /// Returns true if the exclusion changed; this does not register unknown themes.
+        /// </summary>
+        public static bool ShowTheme(string themeName)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(themeName);
+            if (!_excludedThemes.Remove(themeName)) return false;
+            NotifyThemeListChanged();
+            return true;
+        }
+
+        /// <summary>
+        /// Whether a name is eligible for display, independently of theme registration.
+        /// </summary>
+        public static bool IsThemeVisible(string themeName) =>
+            !string.IsNullOrWhiteSpace(themeName) && !_excludedThemes.Contains(themeName);
+
+        private static void NotifyThemeListChanged()
+        {
+            RebuildThemeList();
+            AvailableThemesChanged?.Invoke(null, EventArgs.Empty);
+        }
 
         /// <summary>
         /// When true, ApplyTheme calls only update internal state without actually applying the theme.
@@ -60,7 +197,7 @@ namespace Flowery.Controls
         public static Func<string, bool>? CustomThemeApplicator { get; set; }
 
         /// <summary>
-        /// All available DaisyUI themes.
+        /// Visible registered themes, with the preferred theme first and the rest sorted by name.
         /// </summary>
         public static ReadOnlyCollection<DaisyThemeInfo> AvailableThemes { get; private set; } =
             new([]);
@@ -129,6 +266,7 @@ namespace Flowery.Controls
         /// <summary>
         /// Event raised when <see cref="RegisterTheme"/> adds a new theme name.
         /// Built-in themes raise this event only when <see cref="NotifyForInternalThemesChanged"/> is true.
+        /// Changes to exclusions or the preferred theme always raise this event.
         /// </summary>
         public static event EventHandler? AvailableThemesChanged;
 
@@ -199,9 +337,26 @@ namespace Flowery.Controls
             }
         }
 
+        internal static void EnsureProductThemeRegistered(ProductPalette palette)
+        {
+            if (GetThemeInfo(palette.Name) != null)
+                return;
+
+            var precompiled = ProductPalettes.Get(palette.Name);
+            if (precompiled != null)
+            {
+                var info = new DaisyThemeInfo(palette.Name, FloweryColorHelpers.IsDark(precompiled.Base100));
+                RegisterTheme(info, () => DaisyPaletteFactory.Create(precompiled));
+                return;
+            }
+
+            var fallbackInfo = new DaisyThemeInfo(palette.Name, FloweryColorHelpers.IsDark(palette.Background));
+            RegisterTheme(fallbackInfo, () => ProductPaletteFactory.CreateResourceDictionary(palette));
+        }
+
         private static void RebuildThemeList()
         {
-            var list = ThemesByName.Values.Select(d => d.Info).OrderBy(i => i.Name).ToList();
+            var list = ThemeListResolver.AvailableThemes(ThemesByName.Values.Select(static definition => definition.Info));
             AvailableThemes = new ReadOnlyCollection<DaisyThemeInfo>(list);
         }
 

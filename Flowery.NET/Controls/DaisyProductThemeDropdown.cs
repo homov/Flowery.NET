@@ -1,9 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Flowery.Helpers;
 using Flowery.Theming;
@@ -13,12 +12,24 @@ namespace Flowery.Controls
     /// <summary>
     /// Preview information for a product theme.
     /// </summary>
-    public class ProductThemePreviewInfo
+    public class ProductThemePreviewInfo : IThemeListItem
     {
-        public ProductPalette Palette { get; }
+        /// <summary>Product palette, or null for a registered standard theme entry.</summary>
+        public ProductPalette? Palette { get; }
 
-        public string Name => Palette.Name;
-        public string DisplayName => Palette.Name;
+        public string Name { get; }
+        public string DisplayName { get; }
+
+        /// <summary>Whether the popup draws a group separator before this theme.</summary>
+        public bool HasSeparatorBefore { get; private set; }
+
+        IThemeListItem IThemeListItem.WithSeparator(bool show)
+        {
+            if (HasSeparatorBefore == show) return this;
+            var copy = (ProductThemePreviewInfo)MemberwiseClone();
+            copy.HasSeparatorBefore = show;
+            return copy;
+        }
 
         public IBrush Primary { get; }
         public IBrush Secondary { get; }
@@ -29,11 +40,26 @@ namespace Flowery.Controls
         public ProductThemePreviewInfo(ProductPalette palette)
         {
             Palette = palette;
+            Name = palette.Name;
+            DisplayName = palette.Name;
             Primary = ParseBrush(palette.Primary);
             Secondary = ParseBrush(palette.Secondary);
             Accent = ParseBrush(palette.Accent);
             Base100 = ParseBrush(palette.Background);
             BaseContent = ParseBrush(palette.Text);
+        }
+
+        internal ProductThemePreviewInfo(DaisyThemeManager.ThemeEntry entry)
+        {
+            var preview = ThemeListResolver.CreatePreview(entry);
+            Palette = entry.ProductPalette;
+            Name = preview.Name;
+            DisplayName = preview.DisplayName;
+            Primary = preview.Primary;
+            Secondary = preview.Secondary;
+            Accent = preview.Accent;
+            Base100 = preview.Base100;
+            BaseContent = preview.BaseContent;
         }
 
         private static IBrush ParseBrush(string hex)
@@ -52,7 +78,7 @@ namespace Flowery.Controls
     {
         protected override Type StyleKeyOverride => typeof(DaisyProductThemeDropdown);
 
-        private static List<ProductThemePreviewInfo>? _cachedThemes;
+        private readonly ThemeDropdownSource<ProductThemePreviewInfo> _themeSource;
         private bool _isSyncing;
 
         public static readonly StyledProperty<string> SelectedThemeProperty =
@@ -88,16 +114,25 @@ namespace Flowery.Controls
         public DaisyProductThemeDropdown()
         {
             MinWidth = 200;
+            _themeSource = new ThemeDropdownSource<ProductThemePreviewInfo>(this,
+                ThemeListResolver.ProductThemes, static entry => new ProductThemePreviewInfo(entry), RefreshThemes);
         }
+
+        /// <summary>Adds or updates a local entry while retaining the product list and global additions.</summary>
+        /// <param name="originalName">Original registered or product theme name.</param>
+        /// <param name="displayName">Text shown only in this dropdown.</param>
+        /// <param name="preferred">Whether to place the entry in the preferred group, sorted by display name.</param>
+        public void AddTheme(string originalName, string displayName, bool preferred) =>
+            _themeSource.Add(originalName, displayName, preferred);
+
+        /// <summary>Removes a local override and restores the global or product list entry, if available.</summary>
+        public bool RemoveThemeOverride(string originalName) => _themeSource.Remove(originalName);
 
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
 
-            if (ItemCount == 0)
-            {
-                ItemsSource = GetThemeInfos();
-            }
+            _themeSource.Attach();
 
             DaisyThemeManager.ThemeChanged += OnThemeChanged;
             SyncWithCurrentTheme();
@@ -107,6 +142,7 @@ namespace Flowery.Controls
         {
             base.OnDetachedFromVisualTree(e);
             DaisyThemeManager.ThemeChanged -= OnThemeChanged;
+            _themeSource.Detach();
         }
 
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -115,11 +151,11 @@ namespace Flowery.Controls
 
             if (change.Property == SelectedItemProperty && change.NewValue is ProductThemePreviewInfo info)
             {
+                SetCurrentValue(SelectedThemeProperty, info.Name);
                 if (!_isSyncing)
                 {
                     ApplyProductTheme(info);
                 }
-                SelectedTheme = info.Name;
             }
             else if (change.Property == SelectedThemeProperty && change.NewValue is string name)
             {
@@ -134,13 +170,31 @@ namespace Flowery.Controls
             if (!ApplyOnSelection)
                 return;
 
-            EnsureThemeRegistered(info.Name, info.Palette);
+            if (info.Palette is { } palette)
+                DaisyThemeManager.EnsureProductThemeRegistered(palette);
             DaisyThemeManager.ApplyTheme(info.Name);
         }
 
         private void OnThemeChanged(object? sender, string themeName)
         {
             SyncWithCurrentTheme();
+        }
+
+        private void RefreshThemes()
+        {
+            var themes = _themeSource.Resolve();
+            var themeName = SelectedTheme;
+            var wasSyncing = _isSyncing;
+            _isSyncing = true;
+            try
+            {
+                _themeSource.SetView(themes);
+            }
+            finally
+            {
+                _isSyncing = wasSyncing;
+            }
+            SyncToTheme(themeName);
         }
 
         private void SyncWithCurrentTheme()
@@ -163,14 +217,14 @@ namespace Flowery.Controls
                     var match = items.FirstOrDefault(i => string.Equals(i.Name, themeName, StringComparison.OrdinalIgnoreCase));
                     if (match != null)
                     {
-                        SelectedItem = match;
-                        SelectedTheme = match.Name;
+                        SetCurrentValue(SelectedItemProperty, match);
+                        SetCurrentValue(SelectedThemeProperty, match.Name);
                     }
                     else
                     {
                         // Deselect if current theme is not in product list (e.g. system theme)
-                        SelectedItem = null;
-                        SelectedTheme = themeName; // Keep property in sync even if not in dropdown
+                        SetCurrentValue(SelectedItemProperty, null);
+                        SetCurrentValue(SelectedThemeProperty, themeName);
                     }
                 }
             }
@@ -180,42 +234,14 @@ namespace Flowery.Controls
             }
         }
 
-        private static List<ProductThemePreviewInfo> GetThemeInfos()
-        {
-            if (_cachedThemes != null)
-                return _cachedThemes;
-
-            var palettes = ProductPaletteFactory.GetAll();
-            _cachedThemes = palettes.Select(p => new ProductThemePreviewInfo(p)).ToList();
-            return _cachedThemes;
-        }
 
         /// <summary>
         /// Clears cached preview entries so they are rebuilt on next attach.
         /// </summary>
         public static void InvalidateThemeCache()
         {
-            _cachedThemes = null;
+            ThemeListResolver.InvalidateProductThemes();
         }
 
-        private static void EnsureThemeRegistered(string themeName, ProductPalette fallbackPalette)
-        {
-            if (DaisyThemeManager.GetThemeInfo(themeName) != null)
-                return;
-
-            // Prefer precompiled palette data when available.
-            var precompiled = ProductPalettes.Get(themeName);
-            if (precompiled != null)
-            {
-                var isDark = FloweryColorHelpers.IsDark(precompiled.Base100);
-                var info = new DaisyThemeInfo(themeName, isDark);
-                DaisyThemeManager.RegisterTheme(info, () => DaisyPaletteFactory.Create(precompiled));
-                return;
-            }
-
-            var fallbackIsDark = FloweryColorHelpers.IsDark(fallbackPalette.Background);
-            var fallbackInfo = new DaisyThemeInfo(themeName, fallbackIsDark);
-            DaisyThemeManager.RegisterTheme(fallbackInfo, () => ProductPaletteFactory.CreateResourceDictionary(fallbackPalette));
-        }
     }
 }

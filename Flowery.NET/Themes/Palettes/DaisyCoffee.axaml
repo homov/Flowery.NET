@@ -1,4 +1,4 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- DaisyUI Coffee Theme Palette -->
     <!-- Primary -->
@@ -16,6 +16,7 @@
     <SolidColorBrush x:Key="DaisySecondaryFocusBrush" Color="{StaticResource DaisySecondaryFocusColor}" />
     <Color x:Key="DaisySecondaryContentColor">#D0D5D5</Color>
     <SolidColorBrush x:Key="DaisySecondaryContentBrush" Color="{StaticResource DaisySecondaryContentColor}" />
+    <SolidColorBrush x:Key="DaisySecondaryForegroundBrush" Color="#8DB9BB" />
 
     <!-- Accent -->
     <Color x:Key="DaisyAccentColor">#11576D</Color>
@@ -24,6 +25,7 @@
     <SolidColorBrush x:Key="DaisyAccentFocusBrush" Color="{StaticResource DaisyAccentFocusColor}" />
     <Color x:Key="DaisyAccentContentColor">#D0DBE0</Color>
     <SolidColorBrush x:Key="DaisyAccentContentBrush" Color="{StaticResource DaisyAccentContentColor}" />
+    <SolidColorBrush x:Key="DaisyAccentForegroundBrush" Color="#75C4DC" />
 
     <!-- Neutral -->
     <Color x:Key="DaisyNeutralColor">#120C12</Color>

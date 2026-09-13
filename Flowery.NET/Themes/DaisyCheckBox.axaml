@@ -1,6 +1,7 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:Flowery.Controls;assembly=Flowery.NET">
+                    xmlns:controls="clr-namespace:Flowery.Controls;assembly=Flowery.NET"
+                    xmlns:services="clr-namespace:Flowery.Services;assembly=Flowery.NET">
 
     <Design.PreviewWith>
         <Border Padding="20">
@@ -19,32 +20,40 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="CornerRadius" Value="4" />
-        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="controls:SelectionControlScale.BaseFontSize" Value="{DynamicResource DaisyCheckboxMediumFontSize}" />
+        <Setter Property="FontSize">
+            <MultiBinding Converter="{x:Static controls:SelectionControlScale.Instance}">
+                <Binding Path="(controls:SelectionControlScale.BaseFontSize)" RelativeSource="{RelativeSource Self}" />
+                <Binding Path="(services:FloweryScaleManager.ScaleFactor)" RelativeSource="{RelativeSource Self}" />
+            </MultiBinding>
+        </Setter>
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="MinHeight" Value="{DynamicResource DaisySizeMediumHeight}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="BorderBrush" Value="{DynamicResource DaisyBaseContentBrush}" />
         <Setter Property="Template">
             <ControlTemplate>
-                <Border BorderBrush="{TemplateBinding BorderBrush}"
+                <Border Background="Transparent" BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
                     <Grid ColumnDefinitions="Auto,*">
-                        <Border x:Name="PART_Border"
-                                Grid.Column="0"
-                                VerticalAlignment="Center"
-                                Width="{DynamicResource DaisyCheckboxMediumSize}" Height="{DynamicResource DaisyCheckboxMediumSize}"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                BorderThickness="1"
-                                BorderBrush="{DynamicResource DaisyBaseContentBrush}"
-                                Background="{DynamicResource DaisyBase100Brush}">
-                            <Path x:Name="CheckMark"
-                                  Stretch="Uniform"
-                                  Width="{DynamicResource DaisyCheckmarkMediumSize}" Height="{DynamicResource DaisyCheckmarkMediumSize}"
-                                  Fill="{DynamicResource DaisyBase100Brush}"
-                                  Data="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
-                                  IsVisible="False" />
-                        </Border>
+                        <LayoutTransformControl Grid.Column="0" VerticalAlignment="Center"
+                            LayoutTransform="{Binding (services:FloweryScaleManager.ScaleFactor), RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static controls:SelectionControlScale.Indicator}}">
+                            <Border x:Name="PART_Border"
+                                    VerticalAlignment="Center"
+                                    Width="{DynamicResource DaisyCheckboxMediumSize}" Height="{DynamicResource DaisyCheckboxMediumSize}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    BorderThickness="1"
+                                    BorderBrush="{DynamicResource DaisyBaseContentBrush}"
+                                    Background="{DynamicResource DaisyBase100Brush}">
+                                <Path x:Name="CheckMark"
+                                      Stretch="Uniform"
+                                      Width="{DynamicResource DaisyCheckmarkMediumSize}" Height="{DynamicResource DaisyCheckmarkMediumSize}"
+                                      Fill="{DynamicResource DaisyBase100Brush}"
+                                      Data="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
+                                      IsVisible="False" />
+                            </Border>
+                        </LayoutTransformControl>
                         <ContentPresenter Grid.Column="1"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -141,6 +150,24 @@
         </Style>
 
         <!-- Sizes -->
+        <Style Selector="^[Size=ExtraSmall]">
+            <Setter Property="controls:SelectionControlScale.BaseFontSize" Value="{DynamicResource DaisyCheckboxExtraSmallFontSize}" />
+            <Setter Property="MinHeight" Value="{DynamicResource DaisySizeExtraSmallHeight}" />
+            <Setter Property="CornerRadius" Value="1" />
+        </Style>
+        <Style Selector="^[Size=Small]">
+            <Setter Property="controls:SelectionControlScale.BaseFontSize" Value="{DynamicResource DaisyCheckboxSmallFontSize}" />
+            <Setter Property="MinHeight" Value="{DynamicResource DaisySizeSmallHeight}" />
+        </Style>
+        <Style Selector="^[Size=Large]">
+            <Setter Property="controls:SelectionControlScale.BaseFontSize" Value="{DynamicResource DaisyCheckboxLargeFontSize}" />
+            <Setter Property="MinHeight" Value="{DynamicResource DaisySizeLargeHeight}" />
+        </Style>
+        <Style Selector="^[Size=ExtraLarge]">
+            <Setter Property="controls:SelectionControlScale.BaseFontSize" Value="{DynamicResource DaisyCheckboxExtraLargeFontSize}" />
+            <Setter Property="MinHeight" Value="{DynamicResource DaisySizeExtraLargeHeight}" />
+            <Setter Property="CornerRadius" Value="3" />
+        </Style>
         <Style Selector="^[Size=Large] /template/ Border#PART_Border">
             <Setter Property="Width" Value="{DynamicResource DaisyCheckboxLargeSize}" />
             <Setter Property="Height" Value="{DynamicResource DaisyCheckboxLargeSize}" />

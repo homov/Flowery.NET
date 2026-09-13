@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using Flowery.Services;
@@ -24,15 +24,31 @@ namespace Flowery.Controls
 
         private const double BaseTextFontSize = 14.0;
 
+        public DaisyThemeController()
+        {
+            _ = new DaisyGlobalSizeSubscription(this, SizeProperty);
+        }
+
         /// <inheritdoc/>
         public void ApplyScaleFactor(double scaleFactor)
         {
+            FloweryScaleManager.SetScaleFactor(this, FloweryScaleManager.SanitizeScaleFactor(scaleFactor));
             FontSize = FloweryScaleManager.ApplyScale(BaseTextFontSize, 11.0, scaleFactor);
         }
 
         private bool _isSyncing;
 
         public bool IsCurrentThemeDark => DaisyThemeManager.IsCurrentThemeDark;
+
+        /// <summary>The checkbox size tier. Uses the global size unless explicitly overridden.</summary>
+        public static readonly StyledProperty<DaisySize> SizeProperty =
+            AvaloniaProperty.Register<DaisyThemeController, DaisySize>(nameof(Size), DaisySize.Medium);
+
+        public DaisySize Size
+        {
+            get => GetValue(SizeProperty);
+            set => SetValue(SizeProperty, value);
+        }
 
         public static readonly StyledProperty<ThemeControllerMode> ModeProperty =
             AvaloniaProperty.Register<DaisyThemeController, ThemeControllerMode>(nameof(Mode), ThemeControllerMode.Toggle);

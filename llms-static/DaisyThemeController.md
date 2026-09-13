@@ -18,6 +18,7 @@ This control uses `DaisyThemeManager` internally, which works with Avalonia's `T
 | Property | Description |
 | -------- | ----------- |
 | `Mode` | Visual mode: Toggle, Checkbox, Swap, ToggleWithText, ToggleWithIcons. |
+| `Size` | Checkbox size tier: ExtraSmall through ExtraLarge. Follows the global size unless an application style, binding, or local value overrides it. |
 | `UncheckedLabel` / `CheckedLabel` | Labels for light/dark (or custom) modes. |
 | `UncheckedTheme` / `CheckedTheme` | Theme names to apply on off/on states (defaults: Light/Dark). |
 | `IsCurrentThemeDark` | Read-only flag returning `DaisyThemeManager.IsCurrentThemeDark`. |
@@ -27,6 +28,8 @@ This control uses `DaisyThemeManager` internally, which works with Avalonia's `T
 - Toggling applies the target theme via `DaisyThemeManager.ApplyTheme(...)`.
 - Subscribes to `DaisyThemeManager.ThemeChanged` to sync `IsChecked` when theme changes externally.
 - When a new theme is applied that isn't the unchecked theme, `CheckedTheme`/`CheckedLabel` update to that theme name.
+- Checkbox mode uses the same indicator and checkmark tokens as `DaisyCheckBox`. At Small, the indicator is 10 × 10 units with a larger transparent click area.
+- Checkbox sizing updates at runtime and respects `FlowerySizeManager.IgnoreGlobalSize`. Its indicator also follows `FloweryScaleManager` scaling.
 
 ## Quick Examples
 
@@ -38,6 +41,12 @@ xmlns:controls="clr-namespace:Flowery.Controls;assembly=Flowery.NET"
 
 <!-- Simple toggle - just drop it in, defaults to Light/Dark -->
 <controls:DaisyThemeController Mode="Toggle" />
+
+<!-- Checkbox follows the global size -->
+<controls:DaisyThemeController Mode="Checkbox" />
+
+<!-- Explicit checkbox size remains independent of global size changes -->
+<controls:DaisyThemeController Mode="Checkbox" Size="Small" />
 
 <!-- Animated sun/moon swap (as used in Gallery) -->
 <controls:DaisyThemeController Mode="Swap" />

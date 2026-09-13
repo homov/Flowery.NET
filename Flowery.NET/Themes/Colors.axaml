@@ -1,5 +1,10 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Standalone text/icon colors can differ from the variant's filled background. -->
+    <SolidColorBrush x:Key="DaisyPrimaryForegroundBrush" Color="{DynamicResource DaisyPrimaryColor}" />
+    <SolidColorBrush x:Key="DaisySecondaryForegroundBrush" Color="{DynamicResource DaisySecondaryColor}" />
+    <SolidColorBrush x:Key="DaisyAccentForegroundBrush" Color="{DynamicResource DaisyAccentColor}" />
+
     <!-- Button defaults follow the active palette; individual palettes can override them. -->
     <SolidColorBrush x:Key="DaisyButtonPrimaryForegroundBrush" Color="{DynamicResource DaisyPrimaryColor}" />
     <SolidColorBrush x:Key="DaisyButtonPrimarySoftBrush" Color="{DynamicResource DaisyBase200Color}" />

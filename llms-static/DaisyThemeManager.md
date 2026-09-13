@@ -38,11 +38,17 @@ DaisyThemeLoader.ApplyThemeToApplication(theme);
 
 | Member | Description |
 | ------ | ----------- |
-| `AvailableThemes` | Read-only list of `DaisyThemeInfo` (Name, IsDark) for bundled and registered themes. |
+| `AvailableThemes` | Read-only list of visible registered themes, ordered by preference and name or configured display text. |
+| `AddTheme(originalName, displayName, preferred)` | Adds or updates global list entries for both dropdown types without applying a theme. |
+| `RemoveThemeOverride(originalName)` | Removes a global display/order override without unregistering the theme. |
+| `ExcludedThemes` | Assign a collection of hidden names. The getter returns a read-only snapshot. |
+| `HideTheme(name)` / `ShowTheme(name)` | Add or remove an exclusion at runtime. Return true when the exclusion changes. |
+| `IsThemeVisible(name)` | Checks whether a name is eligible for display, even before registration. |
+| `PreferredThemes` | Collection of default preferred names for entries without an explicit `AddTheme` flag. Assign `[]` to clear these defaults. |
 | `RegisterTheme(info, paletteFactory)` | Adds or replaces a theme. Raises `AvailableThemesChanged` for new names; built-in names only when `NotifyForInternalThemesChanged` is true. |
 | `GetPaletteFactory(string name)` | Returns the factory passed to `RegisterTheme`, or null if the theme is unknown. |
 | `TryCreatePalette(string name, out palette)` | Creates a palette from the registered factory. Used by theme previews. |
-| `AvailableThemesChanged` | Event fired when `RegisterTheme` adds a new theme name. Built-in themes raise it only when `NotifyForInternalThemesChanged` is true. |
+| `AvailableThemesChanged` | Raised for registration notifications and changes to excluded or preferred names. Visibility and ordering changes always notify. |
 | `NotifyForInternalThemesChanged` | When true, `RegisterTheme` also raises `AvailableThemesChanged` for built-in themes. Default is false. |
 | `ApplyTheme(string name)` | Loads the registered palette factory, swaps the palette, updates `RequestedThemeVariant`, and raises `ThemeChanged`. Uses `CustomThemeApplicator` if set. |
 | `SuppressThemeApplication` | When true, `ApplyTheme` only updates internal state without actually applying. Use during initialization. |
@@ -54,6 +60,109 @@ DaisyThemeLoader.ApplyThemeToApplication(theme);
 | `AlternateThemeName` | Current theme if not the base; otherwise "Dark". |
 | `ThemeChanged` | Event fired with the new theme name after successful application. |
 | `IsDarkTheme(string name)` | Returns whether the theme is marked as dark. |
+
+## Theme Visibility and Ordering
+
+### Global Additions and Display Names
+
+Use `AddTheme` to configure both dropdown types globally, without replacing their existing lists:
+
+```csharp
+DaisyThemeManager.AddTheme("Business", "MyBusiness", false);
+DaisyThemeManager.AddTheme("TheaterCinema", "DarkAndRed", true);
+DaisyThemeManager.AddTheme("Corporate", "Office", true);
+```
+
+The arguments are the original name, the display text, and the preferred flag.
+Standard, registered custom, and product theme names are supported. Unknown names raise `ArgumentException`.
+Original names are case-insensitive. Repeated names update the entry without adding a duplicate.
+Product additions are registered globally, but no palette is applied by `AddTheme`.
+
+Multiple preferred entries appear first, sorted alphabetically by display text. The other entries follow in display-text order.
+`PreferredThemes` supplies defaults for entries without an explicit `AddTheme` flag.
+Exclusions always take precedence.
+
+An individual dropdown can override a global entry:
+
+```csharp
+themeDropdown.AddTheme("Business", "My local business", true);
+productThemeDropdown.AddTheme("TheaterCinema", "Local cinema", false);
+```
+
+Local settings win for that original name only. Other entries continue to inherit global changes.
+Apply these changes on the UI thread once controls exist. Attached dropdowns refresh automatically without switching themes.
+The display text is local UI text; `SelectedTheme` and `ApplyTheme` still use the original name.
+
+**Alias responsibility:** Alternate display names do not become theme identifiers. Your application must keep its own original-name/display-name mapping if it needs to reuse, persist, or look up aliases.
+Use original names for `ApplyTheme`, `HideTheme`, `ShowTheme`, `ExcludedThemes`, `PreferredThemes`, and `RemoveThemeOverride`.
+Dropdown selection properties and theme-name event arguments also contain original names. For example, display `DarkAndRed`, but pass `TheaterCinema` to theme operations.
+
+```csharp
+// Return this entry to the manager's settings.
+themeDropdown.RemoveThemeOverride("Business");
+
+// Remove the global display/order override. Registered themes remain registered.
+DaisyThemeManager.RemoveThemeOverride("TheaterCinema");
+```
+
+### Before Creating Controls
+
+Configure the lists before constructing your controls:
+
+```csharp
+using Flowery.Controls;
+
+DaisyThemeManager.ExcludedThemes = new[] { "Cyberpunk", "SaaS" };
+DaisyThemeManager.PreferredThemes = ["Business", "MicroSaaS"];
+```
+
+Both `DaisyThemeDropdown` and `DaisyProductThemeDropdown` use these settings.
+Names are case-insensitive. Product themes and custom themes can be excluded before registration.
+Preferred entries appear first, sorted alphabetically by display text, regardless of the order in the assigned collection.
+Without `AddTheme` overrides, non-preferred entries keep their normal order.
+
+### Runtime Changes
+
+At runtime, make changes on the UI thread. Open dropdowns update automatically:
+
+```csharp
+DaisyThemeManager.HideTheme("Cyberpunk");
+DaisyThemeManager.ShowTheme("Cyberpunk");
+
+// Put these themes in the preferred group in each list that contains them.
+DaisyThemeManager.PreferredThemes = ["MicroSaaS", "TheaterCinema"];
+```
+
+### Restore the Normal Lists
+
+```csharp
+// Show all themes again.
+DaisyThemeManager.ExcludedThemes = Array.Empty<string>();
+
+// Restore the normal order without changing the active theme.
+DaisyThemeManager.PreferredThemes = [];
+```
+
+Assigning `ExcludedThemes` replaces the set of excluded names. It does not replace the catalog of available themes.
+
+```csharp
+DaisyThemeManager.ExcludedThemes = ["Cyberpunk"];
+DaisyThemeManager.ExcludedThemes = ["Business"];
+// Only Business is now excluded. Cyberpunk is visible again.
+```
+
+Use `HideTheme("Business")` to add an exclusion while keeping existing exclusions.
+Use `ShowTheme("Business")` to remove only that exclusion.
+
+Both `ExcludedThemes` and `PreferredThemes` copy the supplied names and return read-only snapshots.
+Changing your original collection later has no effect; assign it again to update the settings.
+Assigning `PreferredThemes` replaces only the default preferred names; explicit `AddTheme` flags still take precedence.
+Duplicates and casing differences are ignored. Reassigning the same names does not raise another notification.
+
+Exclusions take precedence over `PreferredThemes`. Unknown preferred names have no effect until they appear in a list.
+These settings neither select a theme nor change the active palette or `BaseThemeName`.
+If the active theme is hidden, it remains active and its dropdown selection becomes empty.
+`ApplyTheme`, `GetThemeInfo`, and palette factories still accept hidden themes.
 
 ## Usage Notes
 

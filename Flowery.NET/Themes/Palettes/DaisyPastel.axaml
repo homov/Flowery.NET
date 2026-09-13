@@ -1,4 +1,4 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- DaisyUI Pastel Theme Palette -->
     <!-- Primary -->
@@ -8,6 +8,9 @@
     <SolidColorBrush x:Key="DaisyPrimaryFocusBrush" Color="{StaticResource DaisyPrimaryFocusColor}" />
     <Color x:Key="DaisyPrimaryContentColor">#8000D9</Color>
     <SolidColorBrush x:Key="DaisyPrimaryContentBrush" Color="{StaticResource DaisyPrimaryContentColor}" />
+    <Color x:Key="DaisyPrimaryForegroundColor">#AF8BCB</Color>
+    <SolidColorBrush x:Key="DaisyPrimaryForegroundBrush" Color="{StaticResource DaisyPrimaryForegroundColor}" />
+    <SolidColorBrush x:Key="DaisyButtonPrimaryForegroundBrush" Color="{StaticResource DaisyPrimaryForegroundColor}" />
 
     <!-- Secondary -->
     <Color x:Key="DaisySecondaryColor">#FECCD2</Color>
@@ -16,6 +19,7 @@
     <SolidColorBrush x:Key="DaisySecondaryFocusBrush" Color="{StaticResource DaisySecondaryFocusColor}" />
     <Color x:Key="DaisySecondaryContentColor">#C50035</Color>
     <SolidColorBrush x:Key="DaisySecondaryContentBrush" Color="{StaticResource DaisySecondaryContentColor}" />
+    <SolidColorBrush x:Key="DaisySecondaryForegroundBrush" Color="#D38F9B" />
 
     <!-- Accent -->
     <Color x:Key="DaisyAccentColor">#A3F2CE</Color>

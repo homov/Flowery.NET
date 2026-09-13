@@ -183,7 +183,7 @@
 
         <Style Selector="^[IsOutline=True][Variant=Secondary]">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryForegroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource DaisySecondaryBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
@@ -197,7 +197,7 @@
 
         <Style Selector="^[IsOutline=True][Variant=Accent]">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{DynamicResource DaisyAccentBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyAccentForegroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource DaisyAccentBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
@@ -398,7 +398,7 @@
             <Setter Property="Foreground" Value="{DynamicResource DaisyPrimaryContentBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Outline][Variant=Secondary]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryForegroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource DaisySecondaryBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Outline][Variant=Secondary]:pointerover /template/ Border#PART_Background">
@@ -408,7 +408,7 @@
             <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryContentBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Outline][Variant=Accent]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisyAccentBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyAccentForegroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource DaisyAccentBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Outline][Variant=Accent]:pointerover /template/ Border#PART_Background">
@@ -508,7 +508,7 @@
             <Setter Property="Foreground" Value="{DynamicResource DaisyPrimaryContentBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Dash][Variant=Secondary]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryForegroundBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Dash][Variant=Secondary] /template/ Rectangle#PART_DashBorder">
             <Setter Property="Stroke" Value="{DynamicResource DaisySecondaryBrush}" />
@@ -520,7 +520,7 @@
             <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryContentBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Dash][Variant=Accent]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisyAccentBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyAccentForegroundBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Dash][Variant=Accent] /template/ Rectangle#PART_DashBorder">
             <Setter Property="Stroke" Value="{DynamicResource DaisyAccentBrush}" />
@@ -600,7 +600,7 @@
             <Setter Property="Foreground" Value="{DynamicResource DaisyPrimaryContentBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Soft][Variant=Secondary]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryForegroundBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Soft][Variant=Secondary]:pointerover /template/ Border#PART_Background">
             <Setter Property="Background" Value="{DynamicResource DaisySecondaryBrush}" />
@@ -610,7 +610,7 @@
             <Setter Property="Foreground" Value="{DynamicResource DaisySecondaryContentBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Soft][Variant=Accent]">
-            <Setter Property="Foreground" Value="{DynamicResource DaisyAccentBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DaisyAccentForegroundBrush}" />
         </Style>
         <Style Selector="^[ButtonStyle=Soft][Variant=Accent]:pointerover /template/ Border#PART_Background">
             <Setter Property="Background" Value="{DynamicResource DaisyAccentBrush}" />

@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Flowery.Controls;assembly=Flowery.NET"
     xmlns:services="clr-namespace:Flowery.Services;assembly=Flowery.NET"
@@ -13,6 +13,12 @@
             <!-- Theme Controller -->
             <StackPanel Spacing="12">
                 <local:SectionHeader SectionId="theme-controller" Title="Theme Controller" />
+                <StackPanel Spacing="6" MaxWidth="350" HorizontalAlignment="Left">
+                    <TextBlock Text="Standard and product themes" FontWeight="SemiBold" />
+                    <TextBlock Text="All standard themes, plus the TheaterCinema product theme as DarkAndRed. Corporate is shown as Office. DarkAndRed and Office appear first as preferred themes."
+                               TextWrapping="Wrap" Opacity="0.7" />
+                    <controls:DaisyThemeDropdown x:Name="MixedThemeDropdown" Width="300" />
+                </StackPanel>
                 <WrapPanel Orientation="Horizontal">
                     <StackPanel Spacing="10" Margin="0,0,40,20" Width="350">
                         <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto, Auto" RowSpacing="10" ColumnSpacing="10">
