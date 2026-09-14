@@ -1,0 +1,55 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Flowery.Controls;assembly=Flowery.NET">
+    <ControlTheme x:Key="{x:Type controls:DaisyTabsHeaderButtons}" TargetType="controls:DaisyTabsHeaderButtons">
+        <Setter Property="Foreground" Value="{DynamicResource DaisyBaseContentBrush}" />
+        <Setter Property="FontSize" Value="{DynamicResource DaisySizeSmallFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <controls:DaisyButton Name="PART_PreviousButton"
+                                          Variant="Default" Shape="Square"
+                                          Size="{TemplateBinding Size}"
+                                          FontSize="{Binding FontSize, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          IsVisible="{TemplateBinding ShowNavigationButtons}"
+                                          Command="{TemplateBinding PreviousCommand}">
+                        <controls:DaisyIconText IconSymbol="Back" Size="{TemplateBinding Size}"
+                                                IconSize="{TemplateBinding FontSize}" />
+                    </controls:DaisyButton>
+                    <controls:DaisyButton Name="PART_NextButton"
+                                          Variant="Default" Shape="Square"
+                                          Size="{TemplateBinding Size}"
+                                          FontSize="{Binding FontSize, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          IsVisible="{TemplateBinding ShowNavigationButtons}"
+                                          Command="{TemplateBinding NextCommand}">
+                        <controls:DaisyIconText IconSymbol="Forward" Size="{TemplateBinding Size}"
+                                                IconSize="{TemplateBinding FontSize}" />
+                    </controls:DaisyButton>
+                    <controls:DaisyButton Name="PART_ViewMenuButton"
+                                          Variant="Default" Shape="Square"
+                                          Size="{TemplateBinding Size}"
+                                          FontSize="{Binding FontSize, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          IsVisible="{TemplateBinding ShowViewMenuButton}">
+                        <controls:DaisyIconText IconSymbol="Setting" Size="{TemplateBinding Size}"
+                                                IconSize="{TemplateBinding FontSize}" />
+                    </controls:DaisyButton>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^[Size=ExtraSmall]">
+            <Setter Property="FontSize" Value="{DynamicResource DaisySizeExtraSmallFontSize}" />
+        </Style>
+        <Style Selector="^[Size=Medium]">
+            <Setter Property="FontSize" Value="{DynamicResource DaisySizeMediumFontSize}" />
+        </Style>
+        <Style Selector="^[Size=Large]">
+            <Setter Property="FontSize" Value="{DynamicResource DaisySizeLargeFontSize}" />
+        </Style>
+        <Style Selector="^[Size=ExtraLarge]">
+            <Setter Property="FontSize" Value="{DynamicResource DaisySizeExtraLargeFontSize}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

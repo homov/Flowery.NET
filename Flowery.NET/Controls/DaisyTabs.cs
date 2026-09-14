@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -153,6 +154,67 @@ namespace Flowery.Controls
         {
             FloweryMnemonicHelpers.EnsureStringContentTemplate(this);
         }
+
+        #region Header Content
+
+        public static readonly StyledProperty<object?> HeaderTrailingContentProperty =
+            AvaloniaProperty.Register<DaisyTabs, object?>(nameof(HeaderTrailingContent));
+
+        /// <summary>Gets or sets the content to the right of the tab headers.</summary>
+        public object? HeaderTrailingContent
+        {
+            get => GetValue(HeaderTrailingContentProperty);
+            set => SetValue(HeaderTrailingContentProperty, value);
+        }
+
+        public static readonly StyledProperty<IDataTemplate?> HeaderTrailingContentTemplateProperty =
+            AvaloniaProperty.Register<DaisyTabs, IDataTemplate?>(nameof(HeaderTrailingContentTemplate));
+
+        /// <summary>Gets or sets the template for the trailing header content.</summary>
+        public IDataTemplate? HeaderTrailingContentTemplate
+        {
+            get => GetValue(HeaderTrailingContentTemplateProperty);
+            set => SetValue(HeaderTrailingContentTemplateProperty, value);
+        }
+
+        public static readonly StyledProperty<bool> ShowHeaderButtonsProperty =
+            AvaloniaProperty.Register<DaisyTabs, bool>(nameof(ShowHeaderButtons));
+
+        /// <summary>Gets or sets whether an empty header slot contains the built-in button group.</summary>
+        public bool ShowHeaderButtons
+        {
+            get => GetValue(ShowHeaderButtonsProperty);
+            set => SetValue(ShowHeaderButtonsProperty, value);
+        }
+
+        public static readonly DirectProperty<DaisyTabs, DaisyTabsHeaderButtons?> HeaderButtonsProperty =
+            AvaloniaProperty.RegisterDirect<DaisyTabs, DaisyTabsHeaderButtons?>(
+                nameof(HeaderButtons), tabs => tabs.HeaderButtons);
+
+        private DaisyTabsHeaderButtons? _headerButtons;
+
+        /// <summary>
+        /// Gets the built-in group after ShowHeaderButtons fills an empty slot.
+        /// The instance retains its settings and event handlers when hidden.
+        /// </summary>
+        public DaisyTabsHeaderButtons? HeaderButtons => _headerButtons;
+
+        private void UpdateHeaderButtons()
+        {
+            if (ShowHeaderButtons && HeaderTrailingContent is null)
+            {
+                if (_headerButtons is null)
+                    SetAndRaise(HeaderButtonsProperty, ref _headerButtons, new DaisyTabsHeaderButtons());
+
+                SetCurrentValue(HeaderTrailingContentProperty, _headerButtons);
+            }
+            else if (!ShowHeaderButtons && _headerButtons is not null && ReferenceEquals(HeaderTrailingContent, _headerButtons))
+            {
+                SetCurrentValue(HeaderTrailingContentProperty, null);
+            }
+        }
+
+        #endregion
 
         #region Attached Property: TabColor
 
@@ -430,6 +492,9 @@ namespace Flowery.Controls
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
             base.OnPropertyChanged(change);
+
+            if (change.Property == ShowHeaderButtonsProperty || change.Property == HeaderTrailingContentProperty)
+                UpdateHeaderButtons();
 
             if (change.Property == ItemCountProperty)
             {

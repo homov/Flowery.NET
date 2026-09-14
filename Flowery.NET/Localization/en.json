@@ -57,6 +57,8 @@
   "Accessibility_PreviousItem": "Previous item",
   "Accessibility_NextItem": "Next item",
   "Tabs_CloseTab": "Close Tab",
+  "Tabs_Views": "Views",
+  "Tabs_ManageViews": "Manage views…",
   "Tabs_CloseOtherTabs": "Close Other Tabs",
   "Tabs_CloseTabsToRight": "Close Tabs to the Right",
   "Tabs_TabColor": "Tab Color",

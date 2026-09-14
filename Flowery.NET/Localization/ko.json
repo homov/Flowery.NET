@@ -43,6 +43,8 @@
   "Accessibility_CellularSignal": "휴대폰 신호 {0}/{1}막대",
   "Accessibility_Countdown": "카운트다운",
   "Tabs_CloseTab": "탭 닫기",
+  "Tabs_Views": "보기",
+  "Tabs_ManageViews": "보기 관리…",
   "Tabs_CloseOtherTabs": "다른 탭 닫기",
   "Tabs_CloseTabsToRight": "오른쪽 탭 닫기",
   "Tabs_TabColor": "탭 색상",

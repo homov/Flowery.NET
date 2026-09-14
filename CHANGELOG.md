@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.4.0] - 2026-09-14
+
+### Added
+
+- Added `DaisyTabs.HeaderTrailingContent` and `HeaderTrailingContentTemplate` for actions beside tab headers, with a configurable margin and reserved layout space.
+- Added `DaisyTabsHeaderButtons` with optional navigation buttons, a localized view menu, an active-view check mark, and events and commands for application actions.
+- Added the cancellable `ViewMenuOpening` event to load views and check permissions before the menu entries are built.
+- Added `DaisyTabs.ShowHeaderButtons` and the `HeaderButtons` accessor for a built-in button group. Custom trailing content takes precedence.
+- Added Gallery examples and control documentation for header content and view selection.
+
 ## [3.3.0] - 2026-09-13
 
 ### Breaking Changes

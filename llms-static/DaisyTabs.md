@@ -1,7 +1,7 @@
 <!-- Supplementary documentation for DaisyTabs -->
 <!-- This content is merged into auto-generated docs by generate_docs.py -->
 
-# Overview
+## Overview
 
 DaisyTabs is a styled `TabControl` with four header variants (None, Bordered, Lifted, Boxed) and size presets. It uses a WrapPanel for tab headers and supports standard tab behaviors (`SelectedIndex`, `Items`, `TabItem` content).
 
@@ -18,10 +18,11 @@ DaisyTabs is a styled `TabControl` with four header variants (None, Bordered, Li
 
 | Size | Padding | Font Size |
 | ---- | ------- | --------- |
-| ExtraSmall | 8,4 | 10 |
-| Small | 12,6 | 12 |
-| Medium (default) | 16,8 | 14 |
-| Large | 20,12 | 18 |
+| ExtraSmall | 10,2 | 8 |
+| Small | 12,4 | 10 |
+| Medium (default) | 12,5 | 12 |
+| Large | 14,6 | 14 |
+| ExtraLarge | 14,6 | 16 |
 
 ## Tab Width Options
 
@@ -80,6 +81,70 @@ Control tab sizing behavior to prevent layout shifts or create uniform navigatio
     <TabItem Header="Short"><TextBlock Text="Content" Margin="8" /></TabItem>
 </controls:DaisyTabs>
 ```
+
+## Trailing Header Content
+
+`HeaderTrailingContent` places custom content to the right of the tab headers. `HeaderTrailingContentTemplate` supports data objects and MVVM bindings.
+The header reserves space for this content. Tabs wrap within the remaining space.
+An empty slot has no margin or layout effect. The Boxed header keeps its content width.
+
+```xml
+<controls:DaisyTabs Variant="Bordered">
+    <controls:DaisyTabs.HeaderTrailingContent>
+        <controls:DaisyButton Content="Refresh" Variant="Ghost" Size="Small"
+                              Command="{Binding RefreshCommand}" />
+    </controls:DaisyTabs.HeaderTrailingContent>
+    <TabItem Header="Summary"><TextBlock Text="Summary content" /></TabItem>
+    <TabItem Header="Details"><TextBlock Text="Details content" /></TabItem>
+</controls:DaisyTabs>
+```
+
+`DaisyTabHeaderTrailingMargin` sets the space before the slot. Its default is `8,0,0,0`.
+`TabWidthMode`, `TabWidth`, and `TabMaxWidth` retain their existing behavior. Headers wider than the available area are clipped before the slot.
+The slot does not add overflow scrolling.
+
+The template retains the `PART_HeaderContainer` Border and the `PART_ItemsPresenter` ItemsPresenter.
+Applications can still set `Padding` and `IsVisible` on the header Border.
+`PART_HeaderTrailingContent` is the new ContentPresenter.
+
+## Built-in Header Buttons
+
+If `ShowHeaderButtons` is true and `HeaderTrailingContent` is null, DaisyTabs creates a `DaisyTabsHeaderButtons` instance in the slot.
+`HeaderButtons` exposes this instance immediately. Both button types start hidden. Configure the instance to show navigation, the view menu, or both.
+
+```xml
+<controls:DaisyTabs x:Name="RecordTabs" Variant="Boxed" ShowHeaderButtons="True">
+    <TabItem Header="Records"><TextBlock Text="Record content" /></TabItem>
+    <TabItem Header="Notes"><TextBlock Text="Notes content" /></TabItem>
+</controls:DaisyTabs>
+```
+
+```csharp
+var buttons = RecordTabs.HeaderButtons!;
+buttons.ShowNavigationButtons = true;
+buttons.ShowViewMenuButton = true;
+buttons.Views = new List<DaisyTabView>
+{
+    new() { Id = "summary", Name = "Summary" },
+    new() { Id = "details", Name = "Details" }
+};
+buttons.ActiveViewId = "summary";
+buttons.ViewSelected += OnViewSelected;
+
+void OnViewSelected(object? sender, DaisyTabViewEventArgs e)
+{
+    if (sender is DaisyTabsHeaderButtons source)
+        source.ActiveViewId = e.Id;
+}
+```
+
+Custom trailing content takes precedence. If the slot contains custom content, `ShowHeaderButtons` leaves it in place.
+`HeaderButtons` remains null until DaisyTabs creates the built-in instance.
+Once created, the instance retains its settings and subscriptions while hidden or replaced by custom content.
+Setting `ShowHeaderButtons` to false removes only the built-in instance from the slot.
+
+The group also works directly in `HeaderTrailingContent` or in a toolbar.
+See [DaisyTabsHeaderButtons](DaisyTabsHeaderButtons.md) for commands, events, collection updates, and scaling.
 
 ## Tab Colors
 
@@ -350,3 +415,5 @@ DaisyTabs is designed as a **styling + callback** control, not a document manage
 - **Does not**: Manage tab lifecycle, close tabs automatically, persist state, handle drag-reorder
 
 For richer "document tabs" behavior (close buttons on each tab, dirty indicators, drag-to-reorder, overflow handling), consider creating a dedicated `DaisyDocumentTabs` control that wraps TabControl and owns document-specific behaviors.
+
+---

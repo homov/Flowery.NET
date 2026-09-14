@@ -1422,6 +1422,26 @@
                         </StackPanel>
                     </WrapPanel>
 
+                    <!-- Header actions -->
+                    <TextBlock Text="Header actions" FontWeight="SemiBold" Margin="0,16,0,0" />
+                    <TextBlock Text="Custom content beside the tab headers" Opacity="0.7" />
+                    <controls:DaisyTabs Variant="Bordered">
+                        <controls:DaisyTabs.HeaderTrailingContent>
+                            <controls:DaisyButton Content="Refresh" Variant="Ghost" Size="Small"
+                                                  Click="OnHeaderRefresh" />
+                        </controls:DaisyTabs.HeaderTrailingContent>
+                        <TabItem Header="Summary"><TextBlock Text="Summary content" Margin="8" /></TabItem>
+                        <TabItem Header="Details"><TextBlock Text="Details content" Margin="8" /></TabItem>
+                    </controls:DaisyTabs>
+                    <TextBlock x:Name="HeaderSlotStatus" Text="Ready" Opacity="0.7" />
+
+                    <TextBlock Text="Navigation buttons and named views" Opacity="0.7" Margin="0,8,0,0" />
+                    <controls:DaisyTabs x:Name="HeaderButtonsTabs" Variant="Boxed" ShowHeaderButtons="True">
+                        <TabItem Header="Records"><TextBlock Text="Record content" Margin="8" /></TabItem>
+                        <TabItem Header="Notes"><TextBlock Text="Notes content" Margin="8" /></TabItem>
+                    </controls:DaisyTabs>
+                    <TextBlock x:Name="HeaderButtonsStatus" Text="Selected view: Overview (1)" Opacity="0.7" />
+
                     <!-- Real-World Example -->
                     <TextBlock Text="Real-World Example" FontWeight="SemiBold" Margin="0,16,0,0" />
                     <StackPanel Spacing="10">

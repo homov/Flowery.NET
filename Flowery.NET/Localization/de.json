@@ -43,6 +43,8 @@
   "Accessibility_CellularSignal": "Mobilfunksignal {0} von {1} Balken",
   "Accessibility_Countdown": "Countdown",
   "Tabs_CloseTab": "Tab schließen",
+  "Tabs_Views": "Ansichten",
+  "Tabs_ManageViews": "Bearbeitung...",
   "Tabs_CloseOtherTabs": "Andere Tabs schließen",
   "Tabs_CloseTabsToRight": "Tabs rechts schließen",
   "Tabs_TabColor": "Tab-Farbe",

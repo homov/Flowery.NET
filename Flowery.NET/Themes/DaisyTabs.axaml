@@ -1,4 +1,4 @@
-<Styles xmlns="https://github.com/avaloniaui"
+﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:Flowery.Controls;assembly=Flowery.NET">
 
@@ -58,8 +58,19 @@
                     <ControlTemplate>
                         <DockPanel>
                             <Border Name="PART_HeaderContainer" DockPanel.Dock="Top">
-                                <ItemsPresenter Name="PART_ItemsPresenter"
-                                                ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <ItemsPresenter Name="PART_ItemsPresenter"
+                                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                                    ClipToBounds="{TemplateBinding HeaderTrailingContent, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                    <ContentPresenter Name="PART_HeaderTrailingContent"
+                                                      Grid.Column="1"
+                                                      Content="{TemplateBinding HeaderTrailingContent}"
+                                                      ContentTemplate="{TemplateBinding HeaderTrailingContentTemplate}"
+                                                      IsVisible="{TemplateBinding HeaderTrailingContent, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                      HorizontalAlignment="Right"
+                                                      VerticalAlignment="Center"
+                                                      Margin="{DynamicResource DaisyTabHeaderTrailingMargin}" />
+                                </Grid>
                             </Border>
                             <ContentPresenter Name="PART_SelectedContentHost"
                                               Margin="{TemplateBinding Padding}"

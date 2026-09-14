@@ -43,6 +43,8 @@
   "Accessibility_CellularSignal": "إشارة الخلوي {0} من {1} أشرطة",
   "Accessibility_Countdown": "العد التنازلي",
   "Tabs_CloseTab": "إغلاق علامة التبويب",
+  "Tabs_Views": "طرق العرض",
+  "Tabs_ManageViews": "إدارة طرق العرض…",
   "Tabs_CloseOtherTabs": "إغلاق علامات التبويب الأخرى",
   "Tabs_CloseTabsToRight": "إغلاق علامات التبويب على اليمين",
   "Tabs_TabColor": "لون علامة التبويب",

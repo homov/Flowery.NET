@@ -104,6 +104,7 @@
     <Thickness x:Key="DaisyTabHeaderContainerPaddingSmall">2</Thickness>
     <Thickness x:Key="DaisyTabHeaderContainerPaddingExtraSmall">1</Thickness>
     <Thickness x:Key="DaisyTabHeaderContainerMargin">0,0,0,8</Thickness>
+    <Thickness x:Key="DaisyTabHeaderTrailingMargin">8,0,0,0</Thickness>
     <Thickness x:Key="DaisyTabUnderlineThickness">0,0,0,2</Thickness>
     <Thickness x:Key="DaisyTabLiftedBorderThickness">1,1,1,0</Thickness>
     <Thickness x:Key="DaisyTabLiftedOverlapMargin">0,0,-1,0</Thickness>

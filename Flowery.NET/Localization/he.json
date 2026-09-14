@@ -43,6 +43,8 @@
   "Accessibility_CellularSignal": "אות סלולרי {0} מתוך {1} פסים",
   "Accessibility_Countdown": "ספירה לאחור",
   "Tabs_CloseTab": "סגור לשונית",
+  "Tabs_Views": "תצוגות",
+  "Tabs_ManageViews": "ניהול תצוגות…",
   "Tabs_CloseOtherTabs": "סגור לשוניות אחרות",
   "Tabs_CloseTabsToRight": "סגור לשוניות מימין",
   "Tabs_TabColor": "צבע לשונית",

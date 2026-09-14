@@ -43,6 +43,8 @@
   "Accessibility_CellularSignal": "Segnale cellulare {0} di {1} barre",
   "Accessibility_Countdown": "Conto alla rovescia",
   "Tabs_CloseTab": "Chiudi scheda",
+  "Tabs_Views": "Viste",
+  "Tabs_ManageViews": "Gestisci viste…",
   "Tabs_CloseOtherTabs": "Chiudi le altre schede",
   "Tabs_CloseTabsToRight": "Chiudi le schede a destra",
   "Tabs_TabColor": "Colore scheda",

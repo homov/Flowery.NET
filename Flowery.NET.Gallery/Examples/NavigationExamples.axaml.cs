@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
@@ -17,6 +17,7 @@ public partial class NavigationExamples : UserControl, IScrollableExample
     private Dictionary<string, Visual>? _sectionTargetsById;
     private int _photoTabSelectedIndex;
     private bool _photoTabPointerOver;
+    private int _headerExampleRow = 1;
     private readonly bool _photoTabOverlayAlwaysVisible =
         OperatingSystem.IsBrowser() || OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
 
@@ -24,7 +25,51 @@ public partial class NavigationExamples : UserControl, IScrollableExample
     {
         InitializeComponent();
         InitializePhotoTab();
+        InitializeHeaderButtons();
     }
+
+    private void InitializeHeaderButtons()
+    {
+        if (HeaderButtonsTabs.HeaderButtons is not { } buttons)
+            return;
+
+        buttons.ShowNavigationButtons = true;
+        buttons.ShowViewMenuButton = true;
+        buttons.Views = new List<DaisyTabView>
+        {
+            new() { Id = 1, Name = "Overview" },
+            new() { Id = 2, Name = "Details" },
+            new() { Id = 3, Name = "Archive" }
+        };
+        buttons.ActiveViewId = 1;
+        buttons.PreviousRequested += OnHeaderPrevious;
+        buttons.NextRequested += OnHeaderNext;
+        buttons.ViewSelected += OnHeaderViewSelected;
+        buttons.ManageViewsRequested += OnHeaderManageViews;
+    }
+
+    private void OnHeaderRefresh(object? sender, RoutedEventArgs e) => HeaderSlotStatus.Text = "Refresh requested";
+
+    private void OnHeaderPrevious(object? sender, EventArgs e)
+    {
+        _headerExampleRow = Math.Max(1, _headerExampleRow - 1);
+        HeaderButtonsStatus.Text = $"Current row: {_headerExampleRow}";
+    }
+
+    private void OnHeaderNext(object? sender, EventArgs e)
+    {
+        _headerExampleRow++;
+        HeaderButtonsStatus.Text = $"Current row: {_headerExampleRow}";
+    }
+
+    private void OnHeaderViewSelected(object? sender, DaisyTabViewEventArgs e)
+    {
+        if (sender is DaisyTabsHeaderButtons buttons)
+            buttons.ActiveViewId = e.Id;
+        HeaderButtonsStatus.Text = $"Selected view: {e.Name} ({e.Id})";
+    }
+
+    private void OnHeaderManageViews(object? sender, EventArgs e) => HeaderButtonsStatus.Text = "Manage views requested";
 
     public void ScrollToSection(string sectionName)
     {

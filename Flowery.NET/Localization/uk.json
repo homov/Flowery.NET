@@ -43,6 +43,8 @@
   "Accessibility_CellularSignal": "Мобільний сигнал {0} з {1} поділок",
   "Accessibility_Countdown": "Зворотний відлік",
   "Tabs_CloseTab": "Закрити вкладку",
+  "Tabs_Views": "Подання",
+  "Tabs_ManageViews": "Керувати поданнями…",
   "Tabs_CloseOtherTabs": "Закрити інші вкладки",
   "Tabs_CloseTabsToRight": "Закрити вкладки праворуч",
   "Tabs_TabColor": "Колір вкладки",

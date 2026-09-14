@@ -43,6 +43,8 @@
   "Accessibility_CellularSignal": "Hücresel sinyal {0}/{1} çubuk",
   "Accessibility_Countdown": "Geri sayım",
   "Tabs_CloseTab": "Sekmeyi kapat",
+  "Tabs_Views": "Görünümler",
+  "Tabs_ManageViews": "Görünümleri yönet…",
   "Tabs_CloseOtherTabs": "Diğer sekmeleri kapat",
   "Tabs_CloseTabsToRight": "Sağdaki sekmeleri kapat",
   "Tabs_TabColor": "Sekme rengi",

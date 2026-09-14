@@ -43,6 +43,8 @@
   "Accessibility_CellularSignal": "Señal celular {0} de {1} barras",
   "Accessibility_Countdown": "Cuenta atrás",
   "Tabs_CloseTab": "Cerrar pestaña",
+  "Tabs_Views": "Vistas",
+  "Tabs_ManageViews": "Administrar vistas…",
   "Tabs_CloseOtherTabs": "Cerrar otras pestañas",
   "Tabs_CloseTabsToRight": "Cerrar pestañas a la derecha",
   "Tabs_TabColor": "Color de pestaña",

@@ -43,6 +43,8 @@
   "Accessibility_CellularSignal": "携帯電話信号 {0}/{1}バー",
   "Accessibility_Countdown": "カウントダウン",
   "Tabs_CloseTab": "タブを閉じる",
+  "Tabs_Views": "ビュー",
+  "Tabs_ManageViews": "ビューの管理…",
   "Tabs_CloseOtherTabs": "他のタブを閉じる",
   "Tabs_CloseTabsToRight": "右側のタブを閉じる",
   "Tabs_TabColor": "タブの色",
